@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class EncryptionAlgorithm {
 
-    private static int upper_limit = 50000;
+    private static final int upper_limit = 50000;
 
     public static void Decrypt() {
 
@@ -54,7 +54,7 @@ public class EncryptionAlgorithm {
 
 
         //generate the decrypted file
-        File decrypted_file = null;
+        File decrypted_file;
         try {
             decrypted_file = new File(defile_name + "_decrypted" + Extension);
             if (decrypted_file.createNewFile()) {
@@ -72,7 +72,7 @@ public class EncryptionAlgorithm {
             e.printStackTrace();
             return;
         }
-        FileWriter decrypted_writer = null;
+        FileWriter decrypted_writer;
         try {
             decrypted_writer = new FileWriter(decrypted_file.getAbsoluteFile());
         }
@@ -85,13 +85,13 @@ public class EncryptionAlgorithm {
         //read from the encrypted file and decrypt it to another file
         while (encryptedFile_reader.hasNextLine()) {
             String data = encryptedFile_reader.nextLine();
-            String decrypted_data = "";
+            StringBuilder decrypted_data = new StringBuilder();
             for (int i = 0; i < data.length(); ++i) {
-                decrypted_data += (char) ((int) data.charAt(i) - key);
+                decrypted_data.append((char) ((int) data.charAt(i) - key));
             }
             System.out.println(data + ":--------> " + decrypted_data);
             try {
-                decrypted_writer.write(decrypted_data+'\n');
+                decrypted_writer.write(decrypted_data.toString()+'\n');
             } catch (IOException e) {
                 System.out.println("error: can't write to the file.");
                 e.printStackTrace();
@@ -111,7 +111,7 @@ public class EncryptionAlgorithm {
 
     public static void Encrypt() {
         Scanner scanner = new Scanner(System.in);
-        Random randomaizr = new Random();
+        Random randomizer = new Random();
         System.out.println("Enter the path of yur source file:");
         String path = scanner.nextLine();
         path = path.replaceAll("\"", "");
@@ -131,7 +131,7 @@ public class EncryptionAlgorithm {
 
 
         // generate the encrypted file
-        File encrypted_file = null;
+        File encrypted_file;
         try {
             encrypted_file = new File(file_name + "_encrypted" + Extension);
             if (encrypted_file.createNewFile()) {
@@ -147,7 +147,7 @@ public class EncryptionAlgorithm {
             e.printStackTrace();
             return;
         }
-        FileWriter writer = null;
+        FileWriter writer;
         try {
             writer = new FileWriter(encrypted_file.getAbsoluteFile());
         } catch (IOException e) {
@@ -157,9 +157,9 @@ public class EncryptionAlgorithm {
         }
 
         //generate the key
-        int key = randomaizr.nextInt(upper_limit);
+        int key = randomizer.nextInt(upper_limit);
         //save the key in file named "key.txt"
-        File key_file = null;
+        File key_file;
         try {
             key_file = new File(path.substring(0,path.lastIndexOf('\\')+1)+"key.txt");
             if (key_file.createNewFile()) {
@@ -176,7 +176,7 @@ public class EncryptionAlgorithm {
             e.printStackTrace();
             return;
         }
-        FileWriter key_writer = null;
+        FileWriter key_writer;
         try {
             key_writer = new FileWriter(key_file.getAbsoluteFile());
         } catch (IOException e) {
@@ -196,13 +196,13 @@ public class EncryptionAlgorithm {
         //read lines from the file encrypt and save it in the encrypted file
         while (reader.hasNextLine()) {
             String data = reader.nextLine();
-            String encrypted_data = "";
+            StringBuilder encrypted_data = new StringBuilder();
             for (int i = 0; i < data.length(); ++i) {
-                encrypted_data += (char) ((int) data.charAt(i) + key);
+                encrypted_data.append( (char) ((int) data.charAt(i) + key));
             }
             System.out.println(data + ":--------> " + encrypted_data);
             try {
-                writer.write(encrypted_data+'\n');
+                writer.write(encrypted_data.toString() +'\n');
             } catch (IOException e) {
                 System.out.println("error: can't write to the file.");
                 e.printStackTrace();
