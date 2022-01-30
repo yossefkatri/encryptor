@@ -8,17 +8,21 @@ public class encryptor {
     public static void main(String[] args)
     {
         Scanner scanner = new Scanner(System.in);
-        FileStream fileManager = new FileStream(System.in);
+        FileStream fileManager = new FileStream();
         while(true)
         {
             System.out.println("menu: \n 1: encryption \n 2: decryption");
             int input = scanner.nextInt();
             if(input == 1) {
-                //get the input from the file
-                String path = fileManager.getFileName();
-                String plaintext;
+                //get the file-path from the user
+                System.out.println("Enter the path of yur source file:");
+                String path = scanner.nextLine();
+                path = path.replaceAll("\"", "");
+
+
+                String plainText;
                 try {
-                    plaintext = fileManager.getMsg(path);
+                    plainText = fileManager.getMsg(path);
                 } catch (FileNotFoundException e) {
                     System.out.println("ERROR: the file isn't found");
                     e.printStackTrace();
@@ -28,28 +32,36 @@ public class encryptor {
                 //generate the key and calculate the output
                 Random randomizer = new Random();
                 int key = randomizer.nextInt(upper_limit);
-                String ciphertext = EncryptionAlgorithm.Encrypt(plaintext, key);
+                String cipherText = EncryptionAlgorithm.Encrypt(plainText, key);
 
                 //calculate the path and save the output on files
-                String files_path = fileManager.getOutputFilesPath(path);
-                FileWriter key_writer;
-                FileWriter cipher_writer;
+                String filesPath = fileManager.getOutputFilesPath(path);
+                FileWriter keyWriter;
+                FileWriter cipherWriter;
                 try {
-                    key_writer = fileManager.getKeyFile(files_path);
-                    cipher_writer = fileManager.getEncryptedFile(path);
+                    keyWriter = fileManager.getKeyFile(filesPath);
+                    cipherWriter = fileManager.getEncryptedFile(path);
                 }
                 catch (IOException e) {
+                    System.out.println("ERROR: can't create new file.");
                     e.printStackTrace();
                     return;
                 }
-                fileManager.saveData(key_writer,String.valueOf(key));
-                fileManager.saveData(cipher_writer, ciphertext);
+
+                //save the data into the files
+                try {
+                    fileManager.saveData(keyWriter,String.valueOf(key));
+                    fileManager.saveData(cipherWriter, cipherText);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return;
+                }
 
 
                 //close the writer-files
                 try {
-                    key_writer.close();
-                    cipher_writer.close();
+                    keyWriter.close();
+                    cipherWriter.close();
                 }
                 catch (IOException e) {
                     System.out.println("ERROR: can't close the decrypted-file.");
@@ -59,28 +71,53 @@ public class encryptor {
             }
             else if(input == 2)
             {
-                String ciphertext;
-                String EncryptedFile_path =  fileManager.getEncryptedFilePath();
+                //get the encrypted-file-path from the user
+                System.out.println("Enter the location of the encrypted source file: ");
+                String EncryptedFilePath = scanner.nextLine();
+                EncryptedFilePath = EncryptedFilePath.replaceAll("\"","");
+
+
+                String cipherText;
                 try {
-                    ciphertext = fileManager.getMsg(EncryptedFile_path);
+                    cipherText = fileManager.getMsg(EncryptedFilePath);
                 } catch (FileNotFoundException e) {
                     System.out.println("ERROR: the file isn't found.");
                     e.printStackTrace();
                     return;
                 }
-                int key = fileManager.getKey();
-                String DecryptMessage = EncryptionAlgorithm.Decrypt(ciphertext,key);
-                FileWriter decrypted_file;
+                System.out.println("Enter the location of the key file: ");
+                String KeyFilePath = scanner.nextLine();
+                KeyFilePath = KeyFilePath.replaceAll("\"","");
+                int key;
                 try {
-                    decrypted_file = fileManager.getDecryptedFile(EncryptedFile_path);
-                }
-                catch (IOException e) {
+                    key = fileManager.getKey(KeyFilePath);
+                } catch (FileNotFoundException e) {
+                    System.out.println("ERROR: the file isn't found.");
                     e.printStackTrace();
                     return;
                 }
-                fileManager.saveData(decrypted_file,DecryptMessage);
+                String DecryptMessage = EncryptionAlgorithm.Decrypt(cipherText,key);
+                FileWriter decryptedFile;
                 try {
-                    decrypted_file.close();
+                    decryptedFile = fileManager.getDecryptedFile(EncryptedFilePath);
+                }
+                catch (IOException e) {
+                    System.out.println("ERROR: can't create new file.");
+                    e.printStackTrace();
+                    return;
+                }
+
+
+                //save the decrypted-text into the file.
+                try {
+                    fileManager.saveData(decryptedFile,DecryptMessage);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return;
+                }
+
+                try {
+                    decryptedFile.close();
                 }
                 catch (IOException e) {
                     System.out.println("ERROR: can't close the decrypted-file.");
