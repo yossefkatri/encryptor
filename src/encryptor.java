@@ -22,7 +22,7 @@ public class encryptor {
 
                 String plainText;
                 try {
-                    plainText = fileManager.getMsg(path);
+                    plainText = fileManager.getFileContent(path);
                 } catch (FileNotFoundException e) {
                     System.out.println("ERROR: the file isn't found");
                     e.printStackTrace();
@@ -36,6 +36,8 @@ public class encryptor {
 
                 //calculate the path and save the output on files
                 String filesPath = fileManager.getOutputFilesPath(path);
+                System.out.println("the locations of the key file and the encrypted file :"+ filesPath+"\n");
+
                 FileWriter keyWriter;
                 FileWriter cipherWriter;
                 try {
@@ -73,33 +75,33 @@ public class encryptor {
             {
                 //get the encrypted-file-path from the user
                 System.out.println("Enter the location of the encrypted source file: ");
-                String EncryptedFilePath = scanner.nextLine();
-                EncryptedFilePath = EncryptedFilePath.replaceAll("\"","");
+                String encryptedFilePath = scanner.nextLine();
+                encryptedFilePath = encryptedFilePath.replaceAll("\"","");
 
 
                 String cipherText;
                 try {
-                    cipherText = fileManager.getMsg(EncryptedFilePath);
+                    cipherText = fileManager.getFileContent(encryptedFilePath);
                 } catch (FileNotFoundException e) {
                     System.out.println("ERROR: the file isn't found.");
                     e.printStackTrace();
                     return;
                 }
                 System.out.println("Enter the location of the key file: ");
-                String KeyFilePath = scanner.nextLine();
-                KeyFilePath = KeyFilePath.replaceAll("\"","");
+                String keyFilePath = scanner.nextLine();
+                keyFilePath = keyFilePath.replaceAll("\"","");
                 int key;
                 try {
-                    key = fileManager.getKey(KeyFilePath);
+                    key = fileManager.getKey(keyFilePath);
                 } catch (FileNotFoundException e) {
                     System.out.println("ERROR: the file isn't found.");
                     e.printStackTrace();
                     return;
                 }
-                String DecryptMessage = EncryptionAlgorithm.Decrypt(cipherText,key);
+                String decryptMessage = EncryptionAlgorithm.Decrypt(cipherText,key);
                 FileWriter decryptedFile;
                 try {
-                    decryptedFile = fileManager.getDecryptedFile(EncryptedFilePath);
+                    decryptedFile = fileManager.getDecryptedFile(encryptedFilePath);
                 }
                 catch (IOException e) {
                     System.out.println("ERROR: can't create new file.");
@@ -110,7 +112,7 @@ public class encryptor {
 
                 //save the decrypted-text into the file.
                 try {
-                    fileManager.saveData(decryptedFile,DecryptMessage);
+                    fileManager.saveData(decryptedFile,decryptMessage);
                 } catch (IOException e) {
                     e.printStackTrace();
                     return;

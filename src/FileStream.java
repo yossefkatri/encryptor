@@ -5,9 +5,9 @@ public class FileStream {
 
     //create the proper-file-name from the path and the ending.
     private String getFileName(String filePath, String ending) {
-        String Extension = filePath.substring(filePath.lastIndexOf("."));
+        String extension = filePath.substring(filePath.lastIndexOf("."));
         String defileName = filePath.substring(0, filePath.lastIndexOf(".")).replaceAll("_encrypted","");
-        return defileName +  ending + Extension;
+        return defileName +  ending + extension;
     }
 
     //create file by his name
@@ -15,11 +15,7 @@ public class FileStream {
         //create the decrypted file
         File file;
         file = new File(fileName);
-        if (file.createNewFile()) {
-                System.out.println("File created: " + file.getName());
-            }
-        else {
-                System.out.println("File does exists.");
+        if (!file.createNewFile()) {
                 PrintWriter writer = new PrintWriter(file);
                 writer.print("");
                 writer.close();
@@ -44,31 +40,31 @@ public class FileStream {
     }
 
     //get the  message from the file
-    public String getMsg(String filePath) throws FileNotFoundException {
+    public String getFileContent(String filePath) throws FileNotFoundException {
 
         File file = new File(filePath);
-        Scanner FileReader;
-        FileReader = new Scanner(file);
+        Scanner fileReader;
+        fileReader = new Scanner(file);
         StringBuilder message = new StringBuilder();
-        while (FileReader.hasNextLine()) {
-            message.append(FileReader.nextLine()).append("\n");
+        while (fileReader.hasNextLine()) {
+            message.append(fileReader.nextLine()).append("\n");
         }
         message.deleteCharAt(message.length()-1);
-        FileReader.close();
+        fileReader.close();
 
         return message.toString();
     }
 
     //create and return the file-writer for the decrypted file
-    public FileWriter getDecryptedFile(String EncryptedFilePath) throws IOException {
-        String DecryptName = getFileName(EncryptedFilePath,"_decrypted");
-        return createFile(DecryptName);
+    public FileWriter getDecryptedFile(String encryptedFilePath) throws IOException {
+        String decryptName = getFileName(encryptedFilePath,"_decrypted");
+        return createFile(decryptName);
     }
 
     // save the data on the file
-    public void saveData(FileWriter File, String message) throws IOException {
+    public void saveData(FileWriter file, String message) throws IOException {
         try {
-            File.write(message+'\n');
+            file.write(message+'\n');
         }
         catch (IOException e) {
             throw new IOException("ERROR: can't write to the file.");
@@ -78,14 +74,12 @@ public class FileStream {
 
     //print and return the path of the output-files of the encryption (encrypted and key file)
     public String getOutputFilesPath(String path) {
-        String filesPath = path.substring(0,path.lastIndexOf('\\')+1);
-        System.out.println("the locations of the key file and the encrypted file :"+ filesPath+"\n");
-        return filesPath;
+        return path.substring(0,path.lastIndexOf('\\')+1);
     }
 
     //create and return the file-writer for the key file
-    public FileWriter getKeyFile(String KeyFilePath) throws IOException {
-        String fileName = KeyFilePath + "key.txt";
+    public FileWriter getKeyFile(String keyFilePath) throws IOException {
+        String fileName = keyFilePath + "key.txt";
         return createFile(fileName);
     }
 
