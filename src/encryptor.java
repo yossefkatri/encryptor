@@ -3,7 +3,7 @@ import java.util.*;
 
 public class encryptor {
 
-    private static final int upper_limit = 50000;
+    private static final int UPPER_LIMIT = 50000;
 
     public static void main(String[] args)
     {
@@ -31,7 +31,7 @@ public class encryptor {
 
                 //generate the key and calculate the output
                 Random randomizer = new Random();
-                int key = randomizer.nextInt(upper_limit);
+                int key = randomizer.nextInt(UPPER_LIMIT);
                 String cipherText = EncryptionAlgorithm.Encrypt(plainText, key);
 
                 //calculate the path and save the output on files
