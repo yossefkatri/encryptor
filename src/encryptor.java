@@ -41,8 +41,8 @@ public class encryptor {
                 FileWriter keyWriter;
                 FileWriter cipherWriter;
                 try {
-                    keyWriter = fileManager.getKeyFile(filesPath);
-                    cipherWriter = fileManager.getEncryptedFile(path);
+                    keyWriter = fileManager.createFile(filesPath + "key.txt");
+                    cipherWriter = fileManager.createFile(fileManager.getFileName(path, "_encrypted"));
                 }
                 catch (IOException e) {
                     System.out.println("ERROR: can't create new file.");
@@ -101,7 +101,7 @@ public class encryptor {
                 String decryptMessage = EncryptionAlgorithm.Decrypt(cipherText,key);
                 FileWriter decryptedFile;
                 try {
-                    decryptedFile = fileManager.getDecryptedFile(encryptedFilePath);
+                    decryptedFile = fileManager.createFile(fileManager.getFileName(encryptedFilePath,"_decrypted"));
                 }
                 catch (IOException e) {
                     System.out.println("ERROR: can't create new file.");

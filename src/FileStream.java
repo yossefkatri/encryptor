@@ -4,14 +4,14 @@ import java.io.*;
 public class FileStream {
 
     //create the proper-file-name from the path and the ending.
-    private String getFileName(String filePath, String ending) {
+    public String getFileName(String filePath, String ending) {
         String extension = filePath.substring(filePath.lastIndexOf("."));
         String defileName = filePath.substring(0, filePath.lastIndexOf(".")).replaceAll("_encrypted","");
         return defileName +  ending + extension;
     }
 
     //create file by his name
-    private FileWriter createFile(String fileName) throws IOException {
+    public FileWriter createFile(String fileName) throws IOException {
         //create the decrypted file
         File file;
         file = new File(fileName);
@@ -55,12 +55,6 @@ public class FileStream {
         return message.toString();
     }
 
-    //create and return the file-writer for the decrypted file
-    public FileWriter getDecryptedFile(String encryptedFilePath) throws IOException {
-        String decryptName = getFileName(encryptedFilePath,"_decrypted");
-        return createFile(decryptName);
-    }
-
     // save the data on the file
     public void saveData(FileWriter file, String message) throws IOException {
         try {
@@ -75,17 +69,5 @@ public class FileStream {
     //print and return the path of the output-files of the encryption (encrypted and key file)
     public String getOutputFilesPath(String path) {
         return path.substring(0,path.lastIndexOf('\\')+1);
-    }
-
-    //create and return the file-writer for the key file
-    public FileWriter getKeyFile(String keyFilePath) throws IOException {
-        String fileName = keyFilePath + "key.txt";
-        return createFile(fileName);
-    }
-
-    //create and return the file-writer for the encrypted file
-    public FileWriter getEncryptedFile(String filePath) throws IOException {
-        String fileName = getFileName(filePath, "_encrypted");
-        return createFile(fileName);
     }
 }
