@@ -1,0 +1,107 @@
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.List;
+import java.util.Random;
+
+public class DoubleEncryption {
+    EncryptionAlgorithm encryptionAlgorithm;
+    FileStream fileManager;
+    private static final int UPPER_LIMIT = 5000;
+
+    public DoubleEncryption(EncryptionAlgorithm aEncryptionAlgorithm, FileStream aFileManager) {
+        encryptionAlgorithm = aEncryptionAlgorithm;
+        fileManager = aFileManager;
+    }
+
+    public String encryptFile(String originalFilePath) throws Exception {
+
+        String plainText;
+        try {
+            plainText = fileManager.getFileContent(originalFilePath);
+        } catch (FileNotFoundException e) {
+            throw new Exception("the system can't find the file: \n" + e.getMessage().toString());
+        }
+
+        //generate the key and calculate the output
+        Random randomizer = new Random();
+        int key = randomizer.nextInt(UPPER_LIMIT);
+        String cipherText = encryptionAlgorithm.Encrypt(plainText, key);
+        int key1 = randomizer.nextInt(UPPER_LIMIT);
+        cipherText = encryptionAlgorithm.Encrypt(cipherText, key1);
+
+
+        //calculate the path and save the output on files
+        String filesPath = fileManager.getOutputFilesPath(originalFilePath);
+
+        //create the output-files
+        FileWriter keyWriter;
+        FileWriter cipherWriter;
+        try {
+            keyWriter = fileManager.createFile(filesPath + "key.txt");
+            cipherWriter = fileManager.createFile(fileManager.getFileName(originalFilePath, "_encrypted"));
+        } catch (IOException e) {
+            throw new Exception("the system can't create the file: \n" + e.getMessage().toString());
+        }
+
+        String keys = String.valueOf(key) + "\n" + String.valueOf(key1);
+        //save the data into the files
+        try {
+            fileManager.saveData(keyWriter, keys);
+            fileManager.saveData(cipherWriter, cipherText);
+        } catch (IOException e) {
+            throw new Exception("the system can't write into the files: \n" + e.getMessage().toString());
+        }
+
+        //close the writer-files
+        try {
+            keyWriter.close();
+            cipherWriter.close();
+        } catch (IOException e) {
+            throw new Exception("the system can't close the file: \n" + e.getMessage().toString());
+        }
+
+        return filesPath;
+    }
+
+    public String decryptFile(String encryptedFilePath, String keyPath) throws Exception {
+        String cipherText;
+        try {
+            cipherText = fileManager.getFileContent(encryptedFilePath);
+        } catch (FileNotFoundException e) {
+            throw new Exception("the system can't find the file: \n" + e.getMessage().toString());
+        }
+        List<Integer> keys;
+        try {
+            keys = fileManager.getKeys(keyPath);
+        } catch (FileNotFoundException e) {
+            throw new Exception("the system can't find the file: \n" + e.getMessage().toString());
+        }
+
+
+        //decrypt twice
+        String decryptMessage = encryptionAlgorithm.Decrypt(cipherText, keys.get(1));
+        decryptMessage = encryptionAlgorithm.Decrypt(decryptMessage, keys.get(0));
+
+
+
+        String decryptedFilePath = fileManager.getFileName(encryptedFilePath, "_decrypted");
+        FileWriter decryptedFile;
+        try {
+            decryptedFile = fileManager.createFile(decryptedFilePath);
+        } catch (IOException e) {
+            throw new Exception("the system can't create the file: \n" + e.getMessage().toString());
+        }
+        try {
+            fileManager.saveData(decryptedFile, decryptMessage);
+        } catch (IOException e) {
+            throw new Exception("the system can't write into the files: \n" + e.getMessage().toString());
+        }
+        try {
+            decryptedFile.close();
+        } catch (IOException e) {
+            throw new Exception("the system can't close the file: \n" + e.getMessage().toString());
+        }
+        return decryptedFilePath;
+    }
+}

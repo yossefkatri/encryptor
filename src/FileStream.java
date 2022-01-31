@@ -1,3 +1,6 @@
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.io.*;
 
@@ -39,6 +42,24 @@ public class FileStream {
         return key;
     }
 
+    //get the key file
+    public List<Integer> getKeys(String keyFilePath) throws FileNotFoundException {
+
+        //read the key from the file
+        File keyFile = new File(keyFilePath);
+        Scanner keyReader = new Scanner(keyFile);
+
+        //get the key from the file
+        List<Integer> keys =new ArrayList<Integer>();
+        while (keyReader.hasNextLine()) {
+            int key = Integer.parseInt(keyReader.nextLine());
+            keys.add(key);
+        }
+
+        keyReader.close();
+        return keys;
+    }
+
     //get the  message from the file
     public String getFileContent(String filePath) throws FileNotFoundException {
 
@@ -66,7 +87,7 @@ public class FileStream {
 
     }
 
-    //print and return the path of the output-files of the encryption (encrypted and key file)
+    //return the path of the output-files of the encryption (encrypted and key file)
     public String getOutputFilesPath(String path) {
         return path.substring(0,path.lastIndexOf('\\')+1);
     }
