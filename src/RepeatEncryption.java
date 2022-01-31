@@ -33,6 +33,8 @@ public class RepeatEncryption {
             cipherText = encryptionAlgorithm.Encrypt(cipherText, key);
             keys.append(String.valueOf(key)+"\n");
         }
+        //deleting the unnecessary \n
+        keys.deleteCharAt(keys.length()-1);
 
         //calculate the path and save the output on files
         String filesPath = fileManager.getOutputFilesPath(originalFilePath);

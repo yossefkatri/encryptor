@@ -13,7 +13,7 @@ public class encryptor {
             scanner.nextLine();
             EncryptionAlgorithm encryptionAlgorithm= new ShiftUpEncryption();
             FileStream fileManager = new FileStream();
-            DoubleEncryption fileEncryptor = new DoubleEncryption(encryptionAlgorithm, fileManager);
+            RepeatEncryption fileEncryptor = new RepeatEncryption(encryptionAlgorithm, fileManager, 5);
             if(input == 1) {
 
                 //get the file-path from the user
