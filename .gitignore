@@ -1,2 +1,6 @@
 # Project exclude paths
 /out/
+/src/input.txt
+/src/input_decrypted.txt
+/src/input_encrypted.txt
+/src/key.txt

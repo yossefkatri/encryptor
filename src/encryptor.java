@@ -11,9 +11,9 @@ public class encryptor {
             System.out.println("menu: \n 1: encryption \n 2: decryption");
             int input = scanner.nextInt();
             scanner.nextLine();
-            EncryptionAlgorithm encryptionAlgorithm= new ShiftUpEncryption();
+            EncryptionAlgorithm encryptionAlgorithm= new XorEncryption();
             FileStream fileManager = new FileStream();
-            RepeatEncryption fileEncryptor = new RepeatEncryption(encryptionAlgorithm, fileManager, 5);
+            FileEncryptor fileEncryptor = new FileEncryptor(encryptionAlgorithm, fileManager);
             if(input == 1) {
 
                 //get the file-path from the user
