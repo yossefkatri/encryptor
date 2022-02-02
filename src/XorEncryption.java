@@ -1,4 +1,5 @@
 public class XorEncryption implements EncryptionAlgorithm{
+
     // encrypt the plaintext with the key and return the ciphertext
     @Override
     public  String Encrypt(String plainText, int key) {

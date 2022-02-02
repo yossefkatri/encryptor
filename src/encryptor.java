@@ -11,7 +11,7 @@ public class encryptor {
             System.out.println("menu: \n 1: encryption \n 2: decryption");
             int input = scanner.nextInt();
             scanner.nextLine();
-            EncryptionAlgorithm encryptionAlgorithm= new XorEncryption();
+            EncryptionAlgorithm encryptionAlgorithm= new ShiftMultiplyEncryption();
             FileStream fileManager = new FileStream();
             FileEncryptor fileEncryptor = new FileEncryptor(encryptionAlgorithm, fileManager);
             if(input == 1) {

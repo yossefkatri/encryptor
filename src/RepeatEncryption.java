@@ -27,14 +27,10 @@ public class RepeatEncryption {
         //generate the key and calculate the output
         Random randomizer = new Random();
         String cipherText = plainText;
-        StringBuilder keys = new StringBuilder();
+        int key = randomizer.nextInt(UPPER_LIMIT);
         for (int i =0; i< times;++i) {
-            int key = randomizer.nextInt(UPPER_LIMIT);
             cipherText = encryptionAlgorithm.Encrypt(cipherText, key);
-            keys.append(String.valueOf(key)+"\n");
         }
-        //deleting the unnecessary \n
-        keys.deleteCharAt(keys.length()-1);
 
         //calculate the path and save the output on files
         String filesPath = fileManager.getOutputFilesPath(originalFilePath);
@@ -51,7 +47,7 @@ public class RepeatEncryption {
 
         //save the data into the files
         try {
-            fileManager.saveData(keyWriter, keys.toString());
+            fileManager.saveData(keyWriter, String.valueOf(key));
             fileManager.saveData(cipherWriter, cipherText);
         } catch (IOException e) {
             throw new Exception("the system can't write into the files: \n" + e.getMessage().toString());
@@ -75,16 +71,16 @@ public class RepeatEncryption {
         } catch (FileNotFoundException e) {
             throw new Exception("the system can't find the file: \n" + e.getMessage().toString());
         }
-        List<Integer> keys;
+       int key;
         try {
-            keys = fileManager.getKeys(keyPath);
+            key = fileManager.getKey(keyPath);
         } catch (FileNotFoundException e) {
             throw new Exception("the system can't find the file: \n" + e.getMessage().toString());
         }
 
         String decryptMessage = cipherText;
         for(int i=times-1;i>= 0 ;--i){
-            decryptMessage = encryptionAlgorithm.Decrypt(decryptMessage, keys.get(i));
+            decryptMessage = encryptionAlgorithm.Decrypt(decryptMessage, key);
         }
 
 
