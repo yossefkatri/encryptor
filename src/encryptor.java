@@ -11,7 +11,6 @@ public class encryptor {
 
     private static final int UPPER_LIMIT = 5000;
 
-    // TODO: 2/2/2022 in all of your classes - don't have any warnings
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         while (true) {

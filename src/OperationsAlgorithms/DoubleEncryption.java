@@ -11,27 +11,6 @@ public class DoubleEncryption implements EncryptionAlgorithm {
         encryptionAlgorithm = aEncryptionAlgorithm;
     }
 
-    public String encryptFile(String originalFilePath) {
-
-
-
-
-
-
-        // TODO: 2/2/2022 combine the next to parts to - save data in file
-
-    }
-
-    public String decryptFile(String encryptedFilePath, String keyPath)  {
-        String cipherText;
-
-
-        //decrypt twice
-        String decryptMessage = encryptionAlgorithm.Decrypt(cipherText, keys.get(1));
-        decryptMessage = encryptionAlgorithm.Decrypt(decryptMessage, keys.get(0));
-
-    }
-
     //@Override
     public String Encrypt(String plainText, IKey key) {
         //get the key from the object
