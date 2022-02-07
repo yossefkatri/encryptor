@@ -1,9 +1,15 @@
-import EncriptionAlgorithms.ShiftMultiplyEncryption;
+import encriptionAlgorithms.complexAlgorithm.*;
+import encriptionAlgorithms.basicAlgorithms.*;
 import interfaces.EncryptionAlgorithm;
+import interfaces.IKey;
+import keys.DoubleKey;
+import keys.IntKey;
 
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -17,7 +23,7 @@ public class encryptor {
             System.out.println("menu: \n 1: encryption \n 2: decryption");
             int input = scanner.nextInt();
             scanner.nextLine();
-            EncryptionAlgorithm encryptionAlgorithm = new ShiftMultiplyEncryption();
+            EncryptionAlgorithm encryptionAlgorithm = new DoubleEncryption(new DoubleEncryption(new RepeatEncryption(new ShiftUpEncryption(),2)));
             FileStream fileManager = new FileStream();
             if (input == 1) {
                 //get the file-path from the user
@@ -34,9 +40,18 @@ public class encryptor {
                     return;
                 }
 
-                //generate the key
-                Random randomizer = new Random();
-                int key = randomizer.nextInt(UPPER_LIMIT);
+                //get the necessary number of the keys
+                int numKeys = encryptionAlgorithm.NumKeys();
+                List<Integer> keys = new ArrayList<>();
+                for(int i= 0;i<numKeys;++i) {
+                    //generate the key
+                    Random randomizer = new Random();
+                    int tempKey = randomizer.nextInt(UPPER_LIMIT);
+                    keys.add(tempKey);
+                }
+
+
+                IKey key = BuildKey(keys);
 
                 //encrypt the data
                 String cipherText = encryptionAlgorithm.Encrypt(plainText, key);
@@ -58,7 +73,8 @@ public class encryptor {
 
                 //save the data into the files
                 try {
-                    fileManager.saveData(keyWriter,  String.valueOf(key) );
+                    assert key != null;
+                    fileManager.saveData(keyWriter,  key.toString() );
                     fileManager.saveData(cipherWriter, cipherText);
                 } catch (IOException e) {
                     System.out.println("the system can't write into the files: \n" + e.getMessage());
@@ -94,14 +110,17 @@ public class encryptor {
                     System.out.println("the system can't find the file: \n" + e.getMessage());
                     return;
                 }
-                int key;
+                List<Integer> keys;
                 try {
-                    key = fileManager.getKey(keyPath);
+                    keys = fileManager.getKeys(keyPath);
                 }
                 catch (FileNotFoundException e) {
                     System.out.println("the system can't find the file: \n" + e.getMessage());
                     return;
                 }
+
+                IKey key = BuildKey(keys);
+
                 String decryptMessage = encryptionAlgorithm.Decrypt(cipherText,key);
                 String decryptedFilePath =fileManager.getFileName(encryptedFilePath,"_decrypted");
                 FileWriter decryptedFile;
@@ -131,5 +150,23 @@ public class encryptor {
                 System.out.println("Error: you should put 1 or 2");
             }
         }
+    }
+    public static IKey BuildKey(List<Integer> keys) {
+        if (keys.size() == 1)
+        {
+             return new IntKey(keys.get(0));
+
+        }
+        else if(keys.size() == 0)
+        {
+            return null;
+        }
+        IKey key1;
+        key1 = BuildKey(keys.subList(0, keys.size()/2));
+
+        IKey key2;
+        key2 = BuildKey(keys.subList(keys.size()/2,keys.size()));
+
+        return new DoubleKey(key1,key2);
     }
 }

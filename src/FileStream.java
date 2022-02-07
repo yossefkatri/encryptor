@@ -1,4 +1,3 @@
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -50,7 +49,7 @@ public class FileStream {
         Scanner keyReader = new Scanner(keyFile);
 
         //get the key from the file
-        List<Integer> keys =new ArrayList<Integer>();
+        List<Integer> keys = new ArrayList<>();
         while (keyReader.hasNextLine()) {
             int key = Integer.parseInt(keyReader.nextLine());
             keys.add(key);
