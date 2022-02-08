@@ -1,4 +1,4 @@
-package interfaces;
+package keys;
 
 public interface IKey {
 }

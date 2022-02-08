@@ -1,7 +1,5 @@
 package keys;
 
-import interfaces.IKey;
-
 public class DoubleKey implements IKey {
     IKey key1;
     IKey key2;

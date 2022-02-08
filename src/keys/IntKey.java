@@ -1,7 +1,5 @@
 package keys;
 
-import interfaces.IKey;
-
 public class IntKey implements IKey {
     public int key;
 
