@@ -8,23 +8,15 @@ public class XorEncryption  implements EncryptionAlgorithm, BasicEncryption {
 
     // encrypt the plaintext with the key and return the ciphertext
     @Override
-    public  String encrypt(String plainText, IKey key) {
-        int intKey = ((IntKey)key).getKey();
-        StringBuilder encryptedData = new StringBuilder();
-        for (int i = 0; i < plainText.length(); ++i) {
-            encryptedData.append( (char) ((int) plainText.charAt(i) ^ intKey));
-        }
-        return encryptedData.toString();
+    public String encryptChar(String plainChar, IKey key) {
+        int intKey = ((IntKey) key).getKey();
+        return String.valueOf((char) (plainChar.charAt(0) ^ intKey));
     }
 
     //decrypt the ciphertext with the key and return the plaintext
     @Override
-    public  String decrypt(String cipherText, IKey key) {
-        int intKey = ((IntKey)key).getKey();
-        StringBuilder decryptedData = new StringBuilder();
-        for (int i = 0; i < cipherText.length(); ++i) {
-            decryptedData.append((char) ((int) cipherText.charAt(i) ^ intKey));
-        }
-        return decryptedData.toString();
+    public String decryptChar(String cipherChar, IKey key) {
+        int intKey = ((IntKey) key).getKey();
+        return String.valueOf((char) (cipherChar.charAt(0) ^ intKey)) + (char) (cipherChar.charAt(1) ^ intKey);
     }
 }

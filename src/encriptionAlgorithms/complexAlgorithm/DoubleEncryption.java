@@ -3,31 +3,30 @@ package encriptionAlgorithms.complexAlgorithm;
 import encriptionAlgorithms.EncryptionAlgorithm;
 import keys.IKey;
 import keys.DoubleKey;
+import utils.FileEncryptor;
 
 
 public class DoubleEncryption implements EncryptionAlgorithm{
-    EncryptionAlgorithm encryptionAlgorithm;
+    final EncryptionAlgorithm encryptionAlgorithm;
+
 
     public DoubleEncryption(EncryptionAlgorithm aEncryptionAlgorithm) {
         encryptionAlgorithm = aEncryptionAlgorithm;
     }
 
     @Override
-    public String encrypt(String plainText, IKey key) {
-        //encrypt-twice
-        String cipherText = encryptionAlgorithm.encrypt(plainText, ((DoubleKey) key).getKey1());
-        cipherText = encryptionAlgorithm.encrypt(cipherText,((DoubleKey) key).getKey2());
-
-        return cipherText;
+    public String encryptChar(String plainChar, IKey key) {
+        String cipherChar= FileEncryptor.encrypt(encryptionAlgorithm,plainChar,((DoubleKey) key).getKey1());
+        cipherChar = FileEncryptor.encrypt(encryptionAlgorithm,cipherChar,((DoubleKey) key).getKey2());
+        return cipherChar;
     }
 
     @Override
-    public String decrypt(String cipherText, IKey key) {
-        //encrypt-twice
-        String plainText = encryptionAlgorithm.decrypt(cipherText,((DoubleKey) key).getKey2());
-        plainText = encryptionAlgorithm.decrypt(plainText,((DoubleKey) key).getKey1());
+    public String decryptChar(String cipherChar, IKey key) {
 
-        return plainText;
+        String plainChar = FileEncryptor.decrypt(encryptionAlgorithm,cipherChar,((DoubleKey) key).getKey2());
+        plainChar = FileEncryptor.decrypt(encryptionAlgorithm,plainChar,((DoubleKey) key).getKey1());
+        return plainChar;
     }
 
     public EncryptionAlgorithm getEncryptionAlgorithm() {

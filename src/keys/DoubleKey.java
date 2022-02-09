@@ -1,8 +1,8 @@
 package keys;
 
 public class DoubleKey implements IKey {
-    IKey key1;
-    IKey key2;
+    final IKey key1;
+    final IKey key2;
 
     //constructor
     public DoubleKey(IKey key1, IKey key2) {

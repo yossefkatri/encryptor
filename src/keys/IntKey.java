@@ -1,7 +1,7 @@
 package keys;
 
 public class IntKey implements IKey {
-    public int key;
+    public final int key;
 
     //constructor
     public IntKey(int key) {
