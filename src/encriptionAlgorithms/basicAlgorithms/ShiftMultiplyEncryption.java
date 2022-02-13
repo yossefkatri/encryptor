@@ -1,46 +1,60 @@
 package encriptionAlgorithms.basicAlgorithms;
 
-import encriptionAlgorithms.EncryptionAlgorithm;
+import utils.OperationsEncryption;
 import keys.IKey;
 import keys.IntKey;
 
-public class ShiftMultiplyEncryption implements EncryptionAlgorithm, BasicEncryption{
+import java.math.BigInteger;
 
-    @Override
-    public String encryptChar(String plaintext, IKey key) {
-        int intKey = ((IntKey)key).getKey();
-        int product = (int) plaintext.charAt(0) * intKey;
-        char divider = (char) (product /NUM);
-        char remainder = (char) (product %NUM);
-        return String.valueOf(divider) + remainder;
-    }
+public class ShiftMultiplyEncryption extends BasicEncryption {
 
-    @Override
-    public String decryptChar(String ciphertext, IKey key) {
-        int intKey = ((IntKey) key).getKey();
-        return String.valueOf((char) ((ciphertext.charAt(0) * NUM + ciphertext.charAt(1)) / intKey));
-    }
+    private int generatePrimeNum(int intKey) {
 
-    // encrypt the plaintext with the key and return the ciphertext
-    public  String encrypt(String plaintext, IKey key) {
-        int intKey = ((IntKey)key).getKey();
-        StringBuilder encryptedData = new StringBuilder();
-        for (int i = 0; i < plaintext.length(); ++i) {
-            int product = (int) plaintext.charAt(i) * intKey;
-            char divider = (char) (product /NUM);
-            char remainder = (char) (product %NUM);
-            encryptedData.append(divider).append(remainder);
+        int start =3;
+        int result =0;
+        for(int i=0;i<=intKey;++i) {
+            for (int j = start;;++j){
+                boolean flag = false;
+                for (int k = 2; k<j;++k) {
+                    if(j%k == 0) {
+                        flag =true;
+                        break;
+                    }
+                }
+                if(!flag)
+                {
+                    start =j+1;
+                    result =j;
+                    break;
+                }
+            }
         }
-        return encryptedData.toString();
+        return result;
+    }
+    // encrypt the plaintext with the key and return the ciphertext
+    @Override
+    public char encryptChar(char plaintext, IKey key) {
+        //limited my key to 0-10
+        int intKey = ((IntKey)key).getKey()%11;
+        //calculate the prime-key
+        int primeKey = generatePrimeNum(intKey);
+
+        int product = (int) plaintext * primeKey;
+        return (char) (product%ConstantsEncryption.MAX_CHAR);
     }
 
     //decrypt the ciphertext with the key and return the plaintext
-    public  String decrypt(String ciphertext, IKey key) {
-        int intKey = ((IntKey)key).getKey();
-        StringBuilder decryptedData = new StringBuilder();
-        for (int i = 0; i < ciphertext.length(); i+=2) {
-            decryptedData.append((char) ((ciphertext.charAt(i) *NUM+ciphertext.charAt(i+1))/intKey));
-        }
-        return decryptedData.toString();
+    @Override
+    public char decryptChar(char ciphertext, IKey key) {
+        int intKey = ((IntKey)key).getKey()%11;
+        int primeKey =generatePrimeNum(intKey);
+
+        //calculate the multiplication inverse
+        BigInteger bigKey = new BigInteger(String.valueOf(primeKey));
+        BigInteger bigModulo = new BigInteger(String.valueOf(ConstantsEncryption.MAX_CHAR));
+        BigInteger inverse =(bigKey.modInverse(bigModulo));
+
+        return (char) ((ciphertext*inverse.intValue())%ConstantsEncryption.MAX_CHAR);
     }
+
 }

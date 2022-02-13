@@ -1,7 +1,6 @@
 import encriptionAlgorithms.basicAlgorithms.*;
-import encriptionAlgorithms.EncryptionAlgorithm;
+import encriptionAlgorithms.IEncryptionAlgorithm;
 import encriptionAlgorithms.complexAlgorithm.DoubleEncryption;
-import encriptionAlgorithms.complexAlgorithm.RepeatEncryption;
 import utils.FileEncryptor;
 import utils.FileStream;
 
@@ -16,7 +15,7 @@ public class encryptor {
             System.out.println("menu: \n 1: encryption \n 2: decryption");
             int input = scanner.nextInt();
             scanner.nextLine();
-            EncryptionAlgorithm encryptionAlgorithm =new DoubleEncryption(new XorEncryption());
+            IEncryptionAlgorithm encryptionAlgorithm =new ShiftMultiplyEncryption();
             FileEncryptor fileEncryptor = new FileEncryptor(encryptionAlgorithm);
             if (input == 1) {
                 //get the file-path from the user

@@ -1,7 +1,7 @@
 package utils;
 
-import encriptionAlgorithms.EncryptionAlgorithm;
-import encriptionAlgorithms.EncryptionOperations;
+import encriptionAlgorithms.EncryptionAlgorithmImpl;
+import encriptionAlgorithms.IEncryptionAlgorithm;
 import keys.DoubleKey;
 import keys.IKey;
 import keys.IntKey;
@@ -15,7 +15,7 @@ import java.util.Random;
 
 public class FileEncryptor {
     private static final int UPPER_LIMIT = 5000;
-    final EncryptionAlgorithm encryptionAlgorithm;
+    final IEncryptionAlgorithm encryptionAlgorithm;
 
     private IKey BuildKey(List<Integer> keys) {
         if (keys.size() == 1) {
@@ -33,7 +33,7 @@ public class FileEncryptor {
         return new DoubleKey(key1, key2);
     }
 
-    public FileEncryptor(EncryptionAlgorithm encryptionAlgorithm) {
+    public FileEncryptor(IEncryptionAlgorithm encryptionAlgorithm) {
         this.encryptionAlgorithm = encryptionAlgorithm;
     }
 
@@ -46,7 +46,7 @@ public class FileEncryptor {
         }
 
         //get the necessary number of the keys
-        int numKeys = EncryptionOperations.NumberOfKeys(encryptionAlgorithm);
+        int numKeys = ((EncryptionAlgorithmImpl)encryptionAlgorithm).numKeys;
         List<Integer> keys = new ArrayList<>();
         for (int i = 0; i < numKeys; ++i) {
             //generate the key
@@ -59,7 +59,7 @@ public class FileEncryptor {
         IKey key = BuildKey(keys);
 
         //encrypt the data
-        String cipherText = encrypt(encryptionAlgorithm, plainText, key);
+        String cipherText = encrypt( plainText, key);
         //create the output-files
         FileWriter keyWriter;
         FileWriter cipherWriter;
@@ -104,7 +104,7 @@ public class FileEncryptor {
 
         IKey key = BuildKey(keys);
 
-        String decryptMessage = decrypt(encryptionAlgorithm, cipherText, key);
+        String decryptMessage = decrypt(cipherText, key);
         FileWriter decryptedFile;
         try {
             decryptedFile = FileStream.createFile(outputFilePath);
@@ -124,23 +124,18 @@ public class FileEncryptor {
         }
     }
 
-    public static String encrypt(EncryptionAlgorithm encryptionAlgorithm, String plaintext, IKey key) {
+    public  String encrypt(String plaintext, IKey key) {
         StringBuilder encryptedData = new StringBuilder();
-        for (int i = 0; i < plaintext.length(); ++i) {
-            encryptedData.append(encryptionAlgorithm.encryptChar(String.valueOf(plaintext.charAt(i)), key));
+        for (char plainChar : plaintext.toCharArray()) {
+            encryptedData.append(encryptionAlgorithm.encryptChar(plainChar, key));
         }
         return encryptedData.toString();
     }
 
-    public static String decrypt(EncryptionAlgorithm encryptionAlgorithm, String plaintext, IKey key) {
+    public  String decrypt(String ciphertext, IKey key) {
         StringBuilder decryptedData = new StringBuilder();
-        for (int i = 0; i < plaintext.length(); i += 2) {
-            if (i + 1 < plaintext.length()) {
-                decryptedData.append(encryptionAlgorithm.decryptChar(plaintext.substring(i, i + 2), key));
-            } else {
-                decryptedData.append(encryptionAlgorithm.decryptChar("" + plaintext.charAt(i) + plaintext.charAt(i), key));
-                decryptedData.deleteCharAt(decryptedData.length() - 1);
-            }
+        for (char cipherChar : ciphertext.toCharArray()) {
+            decryptedData.append(encryptionAlgorithm.decryptChar(cipherChar, key));
         }
         return decryptedData.toString();
     }

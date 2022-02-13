@@ -1,37 +1,38 @@
 package encriptionAlgorithms.complexAlgorithm;
 
-import encriptionAlgorithms.EncryptionAlgorithm;
+import encriptionAlgorithms.EncryptionAlgorithmImpl;
+import encriptionAlgorithms.IEncryptionAlgorithm;
 import keys.IKey;
-import utils.FileEncryptor;
 
-public class RepeatEncryption implements EncryptionAlgorithm {
-    final EncryptionAlgorithm encryptionAlgorithm;
-
+public class RepeatEncryption extends EncryptionAlgorithmImpl {
+    final IEncryptionAlgorithm encryptionAlgorithm;
     final int times;
-    public RepeatEncryption(EncryptionAlgorithm encryptionAlgorithm, int times) {
+
+    public RepeatEncryption(EncryptionAlgorithmImpl encryptionAlgorithm, int times) {
         this.encryptionAlgorithm = encryptionAlgorithm;
+        this.numKeys = encryptionAlgorithm.numKeys;
         this.times = times;
     }
 
-    public EncryptionAlgorithm getEncryptionAlgorithm() {
+    public IEncryptionAlgorithm getEncryptionAlgorithm() {
         return encryptionAlgorithm;
     }
 
     @Override
-    public String encryptChar(String plainChar, IKey key) {
-        String ciphertext = plainChar;
+    public char encryptChar(char plainChar, IKey key) {
+        char ciphertext = plainChar;
         for (int i = 0; i < times; ++i) {
-            ciphertext = FileEncryptor.encrypt(encryptionAlgorithm,ciphertext, key);
+            ciphertext = encryptionAlgorithm.encryptChar(ciphertext,key);
         }
         return ciphertext;
     }
 
     @Override
-    public String decryptChar(String cipherChar, IKey key) {
-        String decryptMessage = cipherChar;
+    public char decryptChar(char cipherChar, IKey key) {
+        char plainChar = cipherChar;
         for (int i = times - 1; i >= 0; --i) {
-            decryptMessage = FileEncryptor.decrypt(encryptionAlgorithm,decryptMessage, key);
+            plainChar =encryptionAlgorithm.decryptChar(plainChar,key);
         }
-        return decryptMessage;
+        return plainChar;
     }
 }

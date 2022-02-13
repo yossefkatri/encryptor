@@ -2,12 +2,11 @@ package encriptionAlgorithms;
 
 import keys.IKey;
 
-public interface EncryptionAlgorithm {
-
+public interface IEncryptionAlgorithm {
     // encrypt the plainChar with the key and return the ciphertext
-    String encryptChar(String plainChar, IKey key);
+    char encryptChar(char plainChar, IKey key);
 
     //decrypt the cipherChar with the key and return the plaintext
-    String decryptChar(String cipherChar, IKey key);
+    char decryptChar(char cipherChar, IKey key);
 
 }

@@ -1,5 +1,10 @@
 package encriptionAlgorithms.basicAlgorithms;
 
-public interface BasicEncryption {
-    int NUM = 65534;
+import encriptionAlgorithms.EncryptionAlgorithmImpl;
+
+public abstract class BasicEncryption extends EncryptionAlgorithmImpl {
+
+    public BasicEncryption() {
+        numKeys =1;
+    }
 }

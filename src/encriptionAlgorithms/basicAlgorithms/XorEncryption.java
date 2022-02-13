@@ -1,22 +1,21 @@
 package encriptionAlgorithms.basicAlgorithms;
 
-import encriptionAlgorithms.EncryptionAlgorithm;
 import keys.IKey;
 import keys.IntKey;
 
-public class XorEncryption  implements EncryptionAlgorithm, BasicEncryption {
+public class XorEncryption extends BasicEncryption {
 
     // encrypt the plaintext with the key and return the ciphertext
     @Override
-    public String encryptChar(String plainChar, IKey key) {
+    public char encryptChar(char plainChar, IKey key) {
         int intKey = ((IntKey) key).getKey();
-        return String.valueOf((char) (plainChar.charAt(0) ^ intKey));
+        return (char) (plainChar ^ intKey);
     }
 
     //decrypt the ciphertext with the key and return the plaintext
     @Override
-    public String decryptChar(String cipherChar, IKey key) {
+    public char decryptChar(char cipherChar, IKey key) {
         int intKey = ((IntKey) key).getKey();
-        return String.valueOf((char) (cipherChar.charAt(0) ^ intKey)) + (char) (cipherChar.charAt(1) ^ intKey);
+        return (char) (cipherChar ^ intKey);
     }
 }
