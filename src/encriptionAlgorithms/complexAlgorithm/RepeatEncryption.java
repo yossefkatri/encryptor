@@ -10,12 +10,8 @@ public class RepeatEncryption extends EncryptionAlgorithmImpl {
 
     public RepeatEncryption(EncryptionAlgorithmImpl encryptionAlgorithm, int times) {
         this.encryptionAlgorithm = encryptionAlgorithm;
-        this.numKeys = encryptionAlgorithm.numKeys;
+        this.numberOfKeys = encryptionAlgorithm.numberOfKeys;
         this.times = times;
-    }
-
-    public IEncryptionAlgorithm getEncryptionAlgorithm() {
-        return encryptionAlgorithm;
     }
 
     @Override
@@ -30,7 +26,7 @@ public class RepeatEncryption extends EncryptionAlgorithmImpl {
     @Override
     public char decryptChar(char cipherChar, IKey key) {
         char plainChar = cipherChar;
-        for (int i = times - 1; i >= 0; --i) {
+        for (int i = 0; i < times; ++i) {
             plainChar =encryptionAlgorithm.decryptChar(plainChar,key);
         }
         return plainChar;

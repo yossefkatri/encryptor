@@ -6,9 +6,7 @@ import keys.DoubleKey;
 import keys.IKey;
 import keys.IntKey;
 
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -39,14 +37,11 @@ public class FileEncryptor {
 
     public void encryptFile(String originalFilePath, String outputFilePath, String keyPath) throws Exception {
         String plainText;
-        try {
-            plainText = FileStream.getFileContent(originalFilePath);
-        } catch (FileNotFoundException e) {
-            throw new Exception("the system can't find the file: \n" + e.getMessage());
-        }
+        plainText = FileStream.getFileContent(originalFilePath);
+
 
         //get the necessary number of the keys
-        int numKeys = ((EncryptionAlgorithmImpl)encryptionAlgorithm).numKeys;
+        int numKeys = ((EncryptionAlgorithmImpl)encryptionAlgorithm).numberOfKeys;
         List<Integer> keys = new ArrayList<>();
         for (int i = 0; i < numKeys; ++i) {
             //generate the key
@@ -63,65 +58,40 @@ public class FileEncryptor {
         //create the output-files
         FileWriter keyWriter;
         FileWriter cipherWriter;
-        try {
-            keyWriter = FileStream.createFile(keyPath + "key.txt");
-            cipherWriter = FileStream.createFile(outputFilePath);
-        } catch (IOException e) {
-            throw new Exception("the system can't create the file: \n" + e.getMessage());
-        }
+
+
+        keyWriter = FileStream.createFile(keyPath + "key.txt");
+        cipherWriter = FileStream.createFile(outputFilePath);
+
 
         //save the data into the files
-        try {
-            assert key != null;
-            FileStream.saveData(keyWriter, key.toString());
-            FileStream.saveData(cipherWriter, cipherText);
-        } catch (IOException e) {
-            throw new Exception("the system can't write into the files: \n" + e.getMessage());
-        }
+        assert key != null;
+        FileStream.saveData(keyWriter, key.toString());
+        FileStream.saveData(cipherWriter, cipherText);
+
 
         //close the writer-files
-        try {
-            keyWriter.close();
-            cipherWriter.close();
-        } catch (IOException e) {
-            throw new Exception("the system can't close the file: \n" + e.getMessage());
-        }
+        keyWriter.close();
+        cipherWriter.close();
     }
 
     public void decryptFile(String encryptedFilePath, String outputFilePath, String keyPath) throws Exception {
         String cipherText;
-        try {
-            cipherText = FileStream.getFileContent(encryptedFilePath);
-        } catch (FileNotFoundException e) {
-            throw new Exception("the system can't find the file: \n" + e.getMessage());
-        }
+        cipherText = FileStream.getFileContent(encryptedFilePath);
+
         List<Integer> keys;
-        try {
-            keys = FileStream.getKeys(keyPath);
-        } catch (FileNotFoundException e) {
-            throw new Exception("the system can't find the file: \n" + e.getMessage());
-        }
+        keys = FileStream.getListOfIntegers(keyPath);
+
 
         IKey key = BuildKey(keys);
 
         String decryptMessage = decrypt(cipherText, key);
         FileWriter decryptedFile;
-        try {
-            decryptedFile = FileStream.createFile(outputFilePath);
-        } catch (IOException e) {
-            throw new Exception("the system can't create the file: \n" + e.getMessage());
-        }
-        try {
-            FileStream.saveData(decryptedFile, decryptMessage);
-        } catch (IOException e) {
-            throw new Exception("the system can't write into the files: \n" + e.getMessage());
+        decryptedFile = FileStream.createFile(outputFilePath);
 
-        }
-        try {
-            decryptedFile.close();
-        } catch (IOException e) {
-            throw new Exception("the system can't close the file: \n" + e.getMessage());
-        }
+        FileStream.saveData(decryptedFile, decryptMessage);
+
+        decryptedFile.close();
     }
 
     public  String encrypt(String plaintext, IKey key) {

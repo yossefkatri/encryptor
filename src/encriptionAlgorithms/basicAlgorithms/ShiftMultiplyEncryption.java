@@ -1,6 +1,5 @@
 package encriptionAlgorithms.basicAlgorithms;
 
-import utils.OperationsEncryption;
 import keys.IKey;
 import keys.IntKey;
 

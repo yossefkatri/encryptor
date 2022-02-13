@@ -44,21 +44,21 @@ public class FileStream {
     }
 
     //get the key file
-    public static List<Integer> getKeys(String keyFilePath) throws FileNotFoundException {
+    public static List<Integer> getListOfIntegers(String keyFilePath) throws FileNotFoundException {
 
         //read the key from the file
         File keyFile = new File(keyFilePath);
-        Scanner keyReader = new Scanner(keyFile);
+        Scanner itemReader = new Scanner(keyFile);
 
         //get the key from the file
-        List<Integer> keys = new ArrayList<>();
-        while (keyReader.hasNextLine()) {
-            int key = Integer.parseInt(keyReader.nextLine());
-            keys.add(key);
+        List<Integer> items = new ArrayList<>();
+        while (itemReader.hasNextLine()) {
+            int item = Integer.parseInt(itemReader.nextLine());
+            items.add(item);
         }
 
-        keyReader.close();
-        return keys;
+        itemReader.close();
+        return items;
     }
 
     //get the  message from the file
