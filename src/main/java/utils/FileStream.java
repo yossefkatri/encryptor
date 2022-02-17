@@ -30,20 +30,6 @@ public class FileStream {
     }
 
     //get the key file
-    public static int getKey(String keyFilePath) throws FileNotFoundException {
-
-        //read the key from the file
-        File keyFile = new File(keyFilePath);
-        Scanner keyReader = new Scanner(keyFile);
-        //get the key from the file
-        int key;
-        key = Integer.parseInt(keyReader.nextLine());
-        keyReader.close();
-
-        return key;
-    }
-
-    //get the key file
     public static List<Integer> getListOfIntegers(String keyFilePath) throws FileNotFoundException {
 
         //read the key from the file
