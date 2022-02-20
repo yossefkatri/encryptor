@@ -13,7 +13,6 @@ import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -37,14 +36,14 @@ class FileEncryptorTest {
 
     @Test
     void encryptFileTest() {
-        when(encryptionAlgorithm.encryptChar(eq('s'),any(IKey.class))).thenReturn('d');
+        when(encryptionAlgorithm.encryptChar(any(char.class),any(IKey.class))).thenReturn('d');
         when(encryptionAlgorithm.getNumberOfKeys()).thenReturn(1);
         Path sPath = Paths.get("C:\\Users\\Yossef Katri\\IdeaProjects\\encryptor\\src\\main\\java\\outputFiles\\tested5.txt");
 
         File sFile = new File(sPath.toString());
         try {
             FileWriter sFileWriter = new FileWriter(sFile);
-            sFileWriter.write("sssss");
+            sFileWriter.write("ss\nsss");
             sFileWriter.close();
 
             Path outputPath = Paths.get("C:\\Users\\Yossef Katri\\IdeaProjects\\encryptor\\src\\main\\java\\outputFiles\\tested6.txt");
@@ -60,7 +59,7 @@ class FileEncryptorTest {
             File outputFile = new File(outputPath.toString());
             Scanner outputReader = new Scanner(outputFile);
             String content = outputReader.nextLine();
-            assertEquals("ddddd",content);
+            assertEquals("dddddd",content);
 
         }catch (Exception e) {
             fail();
@@ -70,7 +69,7 @@ class FileEncryptorTest {
 
     @Test
     void decryptFileTest() {
-        when(encryptionAlgorithm.decryptChar(eq('s'),any(IKey.class))).thenReturn('d');
+        when(encryptionAlgorithm.decryptChar(any(char.class),any(IKey.class))).thenReturn('d');
 
         Path sPath = Paths.get("C:\\Users\\Yossef Katri\\IdeaProjects\\encryptor\\src\\main\\java\\outputFiles\\tested7.txt");
         Path keyPath = Paths.get("C:\\Users\\Yossef Katri\\IdeaProjects\\encryptor\\src\\main\\java\\outputFiles\\key.txt");
@@ -78,7 +77,7 @@ class FileEncryptorTest {
         File keyFile = new File(keyPath.toString());
         try {
             FileWriter sFileWriter = new FileWriter(sFile);
-            sFileWriter.write("sssss");
+            sFileWriter.write("ss\nsss");
             sFileWriter.close();
 
             FileWriter keyFileWriter = new FileWriter(keyFile);
@@ -92,7 +91,7 @@ class FileEncryptorTest {
             File outputFile = new File(outputPath.toString());
             Scanner outputReader = new Scanner(outputFile);
             String content = outputReader.nextLine();
-            assertEquals("ddddd",content);
+            assertEquals("dddddd",content);
 
         }catch (Exception e) {
             fail();
