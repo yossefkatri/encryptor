@@ -7,6 +7,8 @@ import keys.IKey;
 import keys.IntKey;
 
 import java.io.FileWriter;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -31,17 +33,9 @@ public class FileEncryptor {
         return new DoubleKey(key1, key2);
     }
 
-    public FileEncryptor(IEncryptionAlgorithm encryptionAlgorithm) {
-        this.encryptionAlgorithm = encryptionAlgorithm;
-    }
-
-    public void encryptFile(String originalFilePath, String outputFilePath, String keyPath) throws Exception {
-        String plainText;
-        plainText = FileStream.getFileContent(originalFilePath);
-
-
+    private IKey getKeys() {
         //get the necessary number of the keys
-        int numKeys = ((EncryptionAlgorithmImpl)encryptionAlgorithm).numberOfKeys;
+        int numKeys = ((EncryptionAlgorithmImpl) encryptionAlgorithm).getNumberOfKeys();
         List<Integer> keys = new ArrayList<>();
         for (int i = 0; i < numKeys; ++i) {
             //generate the key
@@ -49,33 +43,56 @@ public class FileEncryptor {
             int tempKey = randomizer.nextInt(UPPER_LIMIT);
             keys.add(tempKey);
         }
+        return BuildKey(keys);
+    }
+
+    private String encrypt(String plaintext, IKey key) {
+        StringBuilder encryptedData = new StringBuilder();
+        for (char plainChar : plaintext.toCharArray()) {
+            encryptedData.append(encryptionAlgorithm.encryptChar(plainChar, key));
+        }
+        return encryptedData.toString();
+    }
+
+    private String decrypt(String ciphertext, IKey key) {
+        StringBuilder decryptedData = new StringBuilder();
+        for (char cipherChar : ciphertext.toCharArray()) {
+            decryptedData.append(encryptionAlgorithm.decryptChar(cipherChar, key));
+        }
+        return decryptedData.toString();
+    }
+
+    public FileEncryptor(IEncryptionAlgorithm encryptionAlgorithm) {
+        this.encryptionAlgorithm = encryptionAlgorithm;
+    }
+
+    public void encryptFile(Path originalFilePath, Path outputFilePath, Path keyPath) throws Exception {
+        String plainText;
+        plainText = FileStream.getFileContent(originalFilePath);
+
+        IKey key = getKeys();
 
 
-        IKey key = BuildKey(keys);
+        String cipherText = encrypt(plainText, key);
 
-        //encrypt the data
-        String cipherText = encrypt( plainText, key);
-        //create the output-files
         FileWriter keyWriter;
         FileWriter cipherWriter;
 
 
-        keyWriter = FileStream.createFile(keyPath + "key.txt");
+        keyWriter = FileStream.createFile(Paths.get(keyPath.toString() ,"key.txt"));
         cipherWriter = FileStream.createFile(outputFilePath);
 
 
-        //save the data into the files
         assert key != null;
         FileStream.saveData(keyWriter, key.toString());
         FileStream.saveData(cipherWriter, cipherText);
 
 
-        //close the writer-files
         keyWriter.close();
         cipherWriter.close();
     }
 
-    public void decryptFile(String encryptedFilePath, String outputFilePath, String keyPath) throws Exception {
+    public void decryptFile(Path encryptedFilePath, Path outputFilePath, Path keyPath) throws Exception {
         String cipherText;
         cipherText = FileStream.getFileContent(encryptedFilePath);
 
@@ -92,22 +109,6 @@ public class FileEncryptor {
         FileStream.saveData(decryptedFile, decryptMessage);
 
         decryptedFile.close();
-    }
-
-    public  String encrypt(String plaintext, IKey key) {
-        StringBuilder encryptedData = new StringBuilder();
-        for (char plainChar : plaintext.toCharArray()) {
-            encryptedData.append(encryptionAlgorithm.encryptChar(plainChar, key));
-        }
-        return encryptedData.toString();
-    }
-
-    public  String decrypt(String ciphertext, IKey key) {
-        StringBuilder decryptedData = new StringBuilder();
-        for (char cipherChar : ciphertext.toCharArray()) {
-            decryptedData.append(encryptionAlgorithm.decryptChar(cipherChar, key));
-        }
-        return decryptedData.toString();
     }
 
 }
