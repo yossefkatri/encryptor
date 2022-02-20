@@ -35,7 +35,7 @@ public class FileEncryptor {
 
     private IKey getKeys() {
         //get the necessary number of the keys
-        int numKeys = ((EncryptionAlgorithmImpl) encryptionAlgorithm).numberOfKeys;
+        int numKeys = ((EncryptionAlgorithmImpl) encryptionAlgorithm).getNumberOfKeys();
         List<Integer> keys = new ArrayList<>();
         for (int i = 0; i < numKeys; ++i) {
             //generate the key
@@ -44,6 +44,22 @@ public class FileEncryptor {
             keys.add(tempKey);
         }
         return BuildKey(keys);
+    }
+
+    private String encrypt(String plaintext, IKey key) {
+        StringBuilder encryptedData = new StringBuilder();
+        for (char plainChar : plaintext.toCharArray()) {
+            encryptedData.append(encryptionAlgorithm.encryptChar(plainChar, key));
+        }
+        return encryptedData.toString();
+    }
+
+    private String decrypt(String ciphertext, IKey key) {
+        StringBuilder decryptedData = new StringBuilder();
+        for (char cipherChar : ciphertext.toCharArray()) {
+            decryptedData.append(encryptionAlgorithm.decryptChar(cipherChar, key));
+        }
+        return decryptedData.toString();
     }
 
     public FileEncryptor(IEncryptionAlgorithm encryptionAlgorithm) {
@@ -93,22 +109,6 @@ public class FileEncryptor {
         FileStream.saveData(decryptedFile, decryptMessage);
 
         decryptedFile.close();
-    }
-
-    public String encrypt(String plaintext, IKey key) {
-        StringBuilder encryptedData = new StringBuilder();
-        for (char plainChar : plaintext.toCharArray()) {
-            encryptedData.append(encryptionAlgorithm.encryptChar(plainChar, key));
-        }
-        return encryptedData.toString();
-    }
-
-    public String decrypt(String ciphertext, IKey key) {
-        StringBuilder decryptedData = new StringBuilder();
-        for (char cipherChar : ciphertext.toCharArray()) {
-            decryptedData.append(encryptionAlgorithm.decryptChar(cipherChar, key));
-        }
-        return decryptedData.toString();
     }
 
 }

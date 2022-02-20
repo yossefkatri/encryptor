@@ -7,30 +7,30 @@ import static org.testng.Assert.assertEquals;
 
 class ShiftMultiplyEncryptionTest {
 
-    final ShiftMultiplyEncryption tested = new ShiftMultiplyEncryption();
+    final ShiftMultiplyEncryption testedEncryption = new ShiftMultiplyEncryption();
 
 
     @Test
     void encryptCharAsciiTest() {
-        char result = tested.encryptChar('a',new IntKey(4));
+        char result = testedEncryption.encryptChar('a',new IntKey(4));
         assertEquals('ӭ',result);
     }
 
     @Test
     void encryptCharNonAsciiTest() {
-        char result = tested.encryptChar('d',new IntKey(4));
+        char result = testedEncryption.encryptChar('d',new IntKey(4));
         assertEquals('Ԕ',result);
     }
 
     @Test
     void decryptCharAsciiTest() {
-        char result = tested.decryptChar('ӭ',new IntKey(4));
+        char result = testedEncryption.decryptChar('ӭ',new IntKey(4));
         assertEquals('a',result);
     }
 
     @Test
     void decryptCharNonAsciiTest() {
-        char result = tested.decryptChar('Ԕ',new IntKey(4));
+        char result = testedEncryption.decryptChar('Ԕ',new IntKey(4));
         assertEquals('d',result);
     }
 }

@@ -11,7 +11,7 @@ import static org.mockito.Mockito.when;
 
 class DoubleEncryptionTest {
     final EncryptionAlgorithmImpl encryptionAlgorithmMocking = mock(EncryptionAlgorithmImpl.class);
-    final DoubleEncryption tested =new DoubleEncryption(encryptionAlgorithmMocking);
+    final DoubleEncryption testedEncryption =new DoubleEncryption(encryptionAlgorithmMocking);
 
     @Test
     void encryptChar() {
@@ -19,7 +19,7 @@ class DoubleEncryptionTest {
         when(encryptionAlgorithmMocking.encryptChar('d', key.getKey1())).thenReturn('f');
         when(encryptionAlgorithmMocking.encryptChar('f', key.getKey2())).thenReturn('g');
 
-        char encryptedChar = tested.encryptChar('d',key);
+        char encryptedChar = testedEncryption.encryptChar('d',key);
         assertEquals('g',encryptedChar);
     }
 
@@ -29,7 +29,7 @@ class DoubleEncryptionTest {
         when(encryptionAlgorithmMocking.decryptChar('d', key.getKey2())).thenReturn('f');
         when(encryptionAlgorithmMocking.decryptChar('f', key.getKey1())).thenReturn('g');
 
-        char encryptedChar = tested.decryptChar('d',key);
+        char encryptedChar = testedEncryption.decryptChar('d',key);
         assertEquals('g',encryptedChar);
     }
 }
