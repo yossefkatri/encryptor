@@ -10,8 +10,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class DoubleEncryptionTest {
-    EncryptionAlgorithmImpl encryptionAlgorithmMocking = mock(EncryptionAlgorithmImpl.class);
-    DoubleEncryption tested =new DoubleEncryption(encryptionAlgorithmMocking);
+    final EncryptionAlgorithmImpl encryptionAlgorithmMocking = mock(EncryptionAlgorithmImpl.class);
+    final DoubleEncryption tested =new DoubleEncryption(encryptionAlgorithmMocking);
 
     @Test
     void encryptChar() {

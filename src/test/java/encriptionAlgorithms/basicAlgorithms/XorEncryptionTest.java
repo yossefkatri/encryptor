@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class XorEncryptionTest {
 
-    XorEncryption tested = new XorEncryption();
+    final XorEncryption tested = new XorEncryption();
 
     @Test
     void encryptCharAsciiTest() {

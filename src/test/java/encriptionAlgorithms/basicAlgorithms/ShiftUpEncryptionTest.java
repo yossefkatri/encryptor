@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ShiftUpEncryptionTest {
 
-    ShiftUpEncryption tested = new ShiftUpEncryption();
+    final ShiftUpEncryption tested = new ShiftUpEncryption();
 
     @Test
     void encryptCharAsciiTest() {
@@ -31,14 +31,12 @@ class ShiftUpEncryptionTest {
     @Test
     void decryptCharAsciiTest() {
         char result = tested.decryptChar('f', new IntKey(5));
-        ;
         assertEquals('a', result);
     }
 
     @Test
     void decryptCharNonAsciiTest() {
         char result = tested.decryptChar('ר', new IntKey(5));
-        ;
         assertEquals('ף', result);
     }
 

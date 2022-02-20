@@ -1,27 +1,35 @@
 package utils;
 
 import encriptionAlgorithms.EncryptionAlgorithmImpl;
-import encriptionAlgorithms.IEncryptionAlgorithm;
 import keys.IKey;
 import keys.IntKey;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
+import java.io.FileNotFoundException;
+import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class FileEncryptorTest {
-    EncryptionAlgorithmImpl encryptionAlgorithm = mock(EncryptionAlgorithmImpl.class);
-    FileEncryptor tested = new FileEncryptor(encryptionAlgorithm);
+    final EncryptionAlgorithmImpl encryptionAlgorithm = mock(EncryptionAlgorithmImpl.class);
+    final FileEncryptor tested = new FileEncryptor(encryptionAlgorithm);
 
     @Test
-    void encryptFile() {
+    void encryptFileSourceFileNonExist() {
+        Exception exception = assertThrows(FileNotFoundException.class,()->tested.encryptFile(Paths.get("C:\\Users\\Yossef Katri\\IdeaProjects\\encryptor\\src\\main\\java\\outputFiles\\input1.txt"),
+                Paths.get("C:\\Users\\Yossef Katri\\IdeaProjects\\encryptor\\src\\main\\java\\outputFiles\\input2.txt"),
+                Paths.get("C:\\Users\\Yossef Katri\\IdeaProjects\\encryptor\\src\\main\\java\\outputFiles")));
+        assertEquals(FileNotFoundException.class,exception.getClass());
     }
 
     @Test
-    void decryptFile() {
+    void decryptFileSourceFileNonExist() {
+        Exception exception = assertThrows(FileNotFoundException.class,()->tested.decryptFile(Paths.get("C:\\Users\\Yossef Katri\\IdeaProjects\\encryptor\\src\\main\\java\\outputFiles\\input1.txt"),
+                Paths.get("C:\\Users\\Yossef Katri\\IdeaProjects\\encryptor\\src\\main\\java\\outputFiles\\input2.txt"),
+                Paths.get("C:\\Users\\Yossef\\Katri\\IdeaProjects\\encryptor\\src\\main\\java\\outputFiles\\input1.txt")));
+        assertEquals(FileNotFoundException.class,exception.getClass());
     }
 
     @Test

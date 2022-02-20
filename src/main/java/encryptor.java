@@ -5,6 +5,8 @@ import encriptionAlgorithms.complexAlgorithm.RepeatEncryption;
 import utils.FileEncryptor;
 import utils.FileStream;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Scanner;
 
 public class encryptor {
@@ -21,12 +23,13 @@ public class encryptor {
             if (input == 1) {
                 //get the file-path from the user
                 System.out.println("Enter the path of your source file:");
-                String path = scanner.nextLine();
-                path = path.replaceAll("\"", "");
+                String stringPath = scanner.nextLine();
+                stringPath = stringPath.replaceAll("\"", "");
 
+                Path path = Paths.get(stringPath);
                 //calculate the path
-                String filesPath = FileStream.getOutputFilesPath(path);
-                String outputFilepath = FileStream.getFileName(path, "_encrypted");
+                Path filesPath = FileStream.getOutputFilesPath(path);
+                Path outputFilepath = FileStream.getFileName(path, "_encrypted");
 
                 try {
                     fileEncryptor.encryptFile(path,outputFilepath,filesPath);
@@ -42,14 +45,18 @@ public class encryptor {
             else if (input == 2) {
                 //get the encrypted-file-path from the user
                 System.out.println("Enter the location of the encrypted source file: ");
-                String encryptedFilePath = scanner.nextLine();
-                encryptedFilePath = encryptedFilePath.replaceAll("\"", "");
+                String encryptedFilePathInput = scanner.nextLine();
+                encryptedFilePathInput = encryptedFilePathInput.replaceAll("\"", "");
 
                 //get the key-file-path from the user
                 System.out.println("Enter the location of the key file: ");
-                String keyPath = scanner.nextLine();
-                keyPath = keyPath.replaceAll("\"", "");
-                String decryptedFilePath =FileStream.getFileName(encryptedFilePath,"_decrypted");
+                String keyPathInput = scanner.nextLine();
+                keyPathInput = keyPathInput.replaceAll("\"", "");
+
+
+                Path encryptedFilePath = Paths.get(encryptedFilePathInput);
+                Path decryptedFilePath = FileStream.getFileName(encryptedFilePath,"_decrypted");
+                Path keyPath = Paths.get(keyPathInput);
 
                 try {
                     fileEncryptor.decryptFile(encryptedFilePath,decryptedFilePath,keyPath);

@@ -1,5 +1,7 @@
 package utils;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -8,17 +10,22 @@ import java.io.*;
 public class FileStream {
 
     //create the proper-file-name from the path and the ending.
-    public static String getFileName(String filePath, String ending) {
-        String extension = filePath.substring(filePath.lastIndexOf("."));
-        String defileName = filePath.substring(0, filePath.lastIndexOf(".")).replaceAll("_encrypted","");
-        return defileName +  ending + extension;
+    public static Path getFileName(Path filePath, String ending) {
+        String fullName = filePath.getFileName().toString();
+
+        String extension = fullName.substring(fullName.lastIndexOf('.'));
+        String name = fullName.substring(0,fullName.lastIndexOf('.'));
+
+        name = name.replaceAll("_encrypted","");
+
+        return Paths.get(filePath.getParent().toString(),name+ending+extension);
     }
 
     //create file by his name
-    public static FileWriter createFile(String fileName) throws IOException {
+    public static FileWriter createFile(Path fileName) throws IOException {
         //create the decrypted file
         File file;
-        file = new File(fileName);
+        file = new File(fileName.toString());
         if (!file.createNewFile()) {
                 PrintWriter writer = new PrintWriter(file);
                 writer.print("");
@@ -30,10 +37,10 @@ public class FileStream {
     }
 
     //get the key file
-    public static List<Integer> getListOfIntegers(String keyFilePath) throws FileNotFoundException {
+    public static List<Integer> getListOfIntegers(Path keyFilePath) throws FileNotFoundException {
 
         //read the key from the file
-        File keyFile = new File(keyFilePath);
+        File keyFile = new File(keyFilePath.toString());
         Scanner itemReader = new Scanner(keyFile);
 
         //get the key from the file
@@ -48,9 +55,9 @@ public class FileStream {
     }
 
     //get the  message from the file
-    public static String getFileContent(String filePath) throws FileNotFoundException {
+    public static String getFileContent(Path filePath) throws FileNotFoundException {
 
-        File file = new File(filePath);
+        File file = new File(filePath.toString());
         Scanner fileReader;
         fileReader = new Scanner(file);
         StringBuilder message = new StringBuilder();
@@ -75,7 +82,7 @@ public class FileStream {
     }
 
     //return the path of the output-files of the encryption (encrypted and key file)
-    public static String getOutputFilesPath(String path) {
-        return path.substring(0,path.lastIndexOf('\\')+1);
+    public static Path getOutputFilesPath(Path path) {
+        return path.getParent();
     }
 }
