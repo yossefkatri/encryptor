@@ -2,10 +2,12 @@ package utils;
 
 import encriptionAlgorithms.EncryptionAlgorithmImpl;
 import encriptionAlgorithms.IEncryptionAlgorithm;
+import exceptions.InvalidEncryptionKeyException;
 import keys.DoubleKey;
 import keys.IKey;
 import keys.IntKey;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -75,21 +77,16 @@ public class FileEncryptor {
 
         String cipherText = encrypt(plainText, key);
 
-        FileWriter keyWriter;
-        FileWriter cipherWriter;
+        File keyFile;
+        File cipherFile;
 
 
-        keyWriter = FileStream.createFile(Paths.get(keyPath.toString() ,"key.txt"));
-        cipherWriter = FileStream.createFile(outputFilePath);
-
+        keyFile = FileStream.createFile(Paths.get(keyPath.toString() ,"key.txt"));
+        cipherFile = FileStream.createFile(outputFilePath);
 
         assert key != null;
-        FileStream.saveData(keyWriter, key.toString());
-        FileStream.saveData(cipherWriter, cipherText);
-
-
-        keyWriter.close();
-        cipherWriter.close();
+        FileStream.saveData(keyFile, key.toString());
+        FileStream.saveData(cipherFile, cipherText);
     }
 
     public void decryptFile(Path encryptedFilePath, Path outputFilePath, Path keyPath) throws Exception {
@@ -98,17 +95,17 @@ public class FileEncryptor {
 
         List<Integer> keys;
         keys = FileStream.getListOfIntegers(keyPath);
-
-
+        int numberOfKey = ((EncryptionAlgorithmImpl)encryptionAlgorithm).numberOfKeys;
+        if(numberOfKey != keys.size()) {
+            throw new InvalidEncryptionKeyException("Number of keys: "+keys.size()+"  \nExpected number of key: "+numberOfKey);
+        }
         IKey key = BuildKey(keys);
 
         String decryptMessage = decrypt(cipherText, key);
-        FileWriter decryptedFile;
+        File decryptedFile;
         decryptedFile = FileStream.createFile(outputFilePath);
 
         FileStream.saveData(decryptedFile, decryptMessage);
-
-        decryptedFile.close();
     }
 
 }

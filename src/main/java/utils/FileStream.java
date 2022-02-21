@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.io.*;
+import exceptions.*;
 
 public class FileStream {
 
@@ -22,67 +23,69 @@ public class FileStream {
     }
 
     //create file by his name
-    public static FileWriter createFile(Path fileName) throws IOException {
-        //create the decrypted file
-        File file;
-        file = new File(fileName.toString());
-        if (!file.createNewFile()) {
-                PrintWriter writer = new PrintWriter(file);
-                writer.print("");
-                writer.close();
-            }
+    public static File createFile(Path fileName) throws IOException {
+       try {
+           //create the decrypted file
+           File file;
+           file = new File(fileName.toString());
+           if (!file.createNewFile()) {
+               PrintWriter writer = new PrintWriter(file);
+               writer.print("");
+               writer.close();
+           }
 
-        //create the file-writer for the file
-        return new FileWriter(file.getAbsoluteFile());
+           //create the file-writer for the file
+           return file;
+       }
+       catch (IOException ex) {
+           throw new IOException("The function can't succeed to create file. \n File: "+fileName.getFileName() +"\n Error: "+ex.getMessage());
+       }
     }
 
     //get the key file
-    public static List<Integer> getListOfIntegers(Path keyFilePath) throws FileNotFoundException {
-
-        //read the key from the file
+    public static List<Integer> getListOfIntegers(Path keyFilePath) throws FileNotFoundException, InvalidEncryptionKeyException {
         File keyFile = new File(keyFilePath.toString());
-        Scanner itemReader = new Scanner(keyFile);
-
-        //get the key from the file
-        List<Integer> items = new ArrayList<>();
-        while (itemReader.hasNextLine()) {
-            int item = Integer.parseInt(itemReader.nextLine());
-            items.add(item);
+        //read the key from the file
+        try(Scanner itemReader = new Scanner(keyFile)) {
+            //get the key from the file
+            List<Integer> items = new ArrayList<>();
+            while (itemReader.hasNextLine()) {
+                int item = Integer.parseInt(itemReader.nextLine());
+                items.add(item);
+            }
+            return items;
+        }catch (FileNotFoundException ex) {
+            throw new FileNotFoundException("The source file isn't found. \n File: "+keyFilePath.getFileName()+"\n Error:"+ ex.getMessage());
         }
-
-        itemReader.close();
-        return items;
+        catch (NumberFormatException ex) {
+            throw new InvalidEncryptionKeyException("The item isn't a pure number.\n"+ex.getMessage());
+        }
     }
 
     //get the  message from the file
     public static String getFileContent(Path filePath) throws FileNotFoundException {
-
         File file = new File(filePath.toString());
-        Scanner fileReader;
-        fileReader = new Scanner(file);
-        StringBuilder message = new StringBuilder();
-        while (fileReader.hasNextLine()) {
-            message.append(fileReader.nextLine()).append("\n");
-        }
-        message.deleteCharAt(message.length()-1);
-        fileReader.close();
 
-        return message.toString();
+        try (Scanner fileReader = new Scanner(file)){
+            StringBuilder message = new StringBuilder();
+            while (fileReader.hasNextLine()) {
+                message.append(fileReader.nextLine()).append("\n");
+            }
+            message.deleteCharAt(message.length()-1);
+            return message.toString();
+        }catch (FileNotFoundException ex){
+            throw new FileNotFoundException("The source file isn't found. \n File: "+filePath.getFileName()+"\n Error:"+ ex.getMessage());
+        }
     }
 
     // save the data on the file
-    public static void saveData(FileWriter file, String message) throws IOException {
-        try {
-            file.write(message+'\n');
+    public static void saveData(File file, String message) throws IOException {
+        try (FileWriter fileWriter = new FileWriter(file)){
+            fileWriter.write(message+'\n');
         }
         catch (IOException e) {
-            throw new IOException("ERROR: can't write to the file.");
+            throw new IOException("The function doesn't succeed to write to the file. \n File: "+file.getName()+"\n Error: "+e.getMessage());
         }
 
-    }
-
-    //return the path of the output-files of the encryption (encrypted and key file)
-    public static Path getOutputFilesPath(Path path) {
-        return path.getParent();
     }
 }

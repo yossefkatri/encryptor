@@ -1,6 +1,5 @@
 import encriptionAlgorithms.basicAlgorithms.*;
 import encriptionAlgorithms.IEncryptionAlgorithm;
-import encriptionAlgorithms.complexAlgorithm.DoubleEncryption;
 import encriptionAlgorithms.complexAlgorithm.RepeatEncryption;
 import utils.FileEncryptor;
 import utils.FileStream;
@@ -25,22 +24,17 @@ public class encryptor {
                 System.out.println("Enter the path of your source file:");
                 String stringPath = scanner.nextLine();
                 stringPath = stringPath.replaceAll("\"", "");
-
+                try {
                 Path path = Paths.get(stringPath);
                 //calculate the path
-                Path filesPath = FileStream.getOutputFilesPath(path);
+                Path filesPath = path.getParent();
                 Path outputFilepath = FileStream.getFileName(path, "_encrypted");
 
-                try {
                     fileEncryptor.encryptFile(path,outputFilepath,filesPath);
+                    System.out.println("the locations of the key file and the encrypted file :" + filesPath + "\n");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-
-                System.out.println("the locations of the key file and the encrypted file :" + filesPath + "\n");
-
-
             }
             else if (input == 2) {
                 //get the encrypted-file-path from the user
@@ -53,12 +47,12 @@ public class encryptor {
                 String keyPathInput = scanner.nextLine();
                 keyPathInput = keyPathInput.replaceAll("\"", "");
 
-
+                try {
                 Path encryptedFilePath = Paths.get(encryptedFilePathInput);
                 Path decryptedFilePath = FileStream.getFileName(encryptedFilePath,"_decrypted");
                 Path keyPath = Paths.get(keyPathInput);
 
-                try {
+
                     fileEncryptor.decryptFile(encryptedFilePath,decryptedFilePath,keyPath);
                 } catch (Exception e) {
                     e.printStackTrace();
