@@ -18,4 +18,9 @@ public class XorEncryption extends BasicEncryption {
         int intKey = ((IntKey) key).getKey();
         return (char) (cipherChar ^ intKey);
     }
+
+    @Override
+    public int getKeyStrength() {
+        return 2;
+    }
 }

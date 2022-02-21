@@ -56,4 +56,9 @@ public class ShiftMultiplyEncryption extends BasicEncryption {
         return (char) ((ciphertext*inverse.intValue())%ConstantsEncryption.MAX_CHAR);
     }
 
+    @Override
+    public int getKeyStrength() {
+        return 3;
+    }
+
 }

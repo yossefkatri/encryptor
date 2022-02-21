@@ -1,10 +1,9 @@
 package utils;
 
+import exceptions.InvalidEncryptionKeyException;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -60,6 +59,25 @@ class FileStreamTest {
     }
 
     @Test
+    void getListOfIntegersFileNotFoundException() {
+        Path Path = Paths.get("C:\\Users\\Yossef Katri\\IdeaProjects\\encryptor\\src\\main\\java\\outputFiles\\tested.txt");
+        assertThrows(FileNotFoundException.class,()->FileStream.getListOfIntegers(Path));
+    }
+
+    @Test
+    void getListOfIntegersInvalidEncryptionKeyException() {
+        Path Path = Paths.get("C:\\Users\\Yossef Katri\\IdeaProjects\\encryptor\\src\\main\\java\\outputFiles\\tested9.txt");
+        try {
+            FileWriter fileWriter = new FileWriter(Path.toString());
+            fileWriter.write("1324\n45s56d67\n55a55");
+            fileWriter.close();
+            assertThrows(InvalidEncryptionKeyException.class,()->FileStream.getListOfIntegers(Path));
+        } catch (Exception e) {
+            fail();
+        }
+    }
+
+    @Test
     void getFileContent() {
         Path Path = Paths.get("C:\\Users\\Yossef Katri\\IdeaProjects\\encryptor\\src\\main\\java\\outputFiles\\tested1.txt");
         FileWriter fileWriter;
@@ -72,6 +90,12 @@ class FileStreamTest {
         } catch (IOException e) {
             fail();
         }
+    }
+
+    @Test
+    void getFileContentFileNotFound() {
+        Path Path = Paths.get("C:\\Users\\Yossef Katri\\IdeaProjects\\encryptor\\src\\main\\java\\outputFiles\\tested.txt");
+       assertThrows(FileNotFoundException.class,()->FileStream.getFileContent(Path));
     }
 
     @Test
@@ -92,4 +116,10 @@ class FileStreamTest {
         }
     }
 
+    @Test
+    void saveDataIOException(){
+        Path path = Paths.get("C:\\Users\\Yossef Katri\\IdeaProjects\\encryptor\\src\\main\\java\\outputFiles");
+        File file = new File(path.toString());
+        assertThrows(IOException.class,()->FileStream.saveData(file,"tested"));
+    }
 }

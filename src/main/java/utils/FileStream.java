@@ -8,7 +8,7 @@ import java.util.Scanner;
 import java.io.*;
 import exceptions.*;
 
-public class FileStream {
+public final class FileStream {
 
     //create the proper-file-name from the path and the ending.
     public static Path getFileName(Path filePath, String ending) {

@@ -9,4 +9,5 @@ public interface IEncryptionAlgorithm {
     //decrypt the cipherChar with the key and return the plaintext
     char decryptChar(char cipherChar, IKey key);
 
+    int getKeyStrength();
 }

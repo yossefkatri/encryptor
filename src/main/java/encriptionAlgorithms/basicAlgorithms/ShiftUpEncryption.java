@@ -17,4 +17,9 @@ public class ShiftUpEncryption extends BasicEncryption {
         int intKey = ((IntKey)key).getKey();
         return (char) ((cipherChar + ConstantsEncryption.MAX_CHAR - intKey) % ConstantsEncryption.MAX_CHAR);
     }
+
+    @Override
+    public int getKeyStrength() {
+        return 1;
+    }
 }
