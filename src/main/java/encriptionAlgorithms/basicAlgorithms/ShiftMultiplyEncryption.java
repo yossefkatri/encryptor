@@ -5,7 +5,21 @@ import keys.IntKey;
 
 import java.math.BigInteger;
 
+//singleton class
 public class ShiftMultiplyEncryption extends BasicEncryption {
+
+    static ShiftMultiplyEncryption instanceShiftMultiplyEncryption = null;
+    private ShiftMultiplyEncryption() {
+    }
+
+    public static ShiftMultiplyEncryption CreateShiftMultiplyEncryption() {
+        if (instanceShiftMultiplyEncryption == null)
+        {
+            instanceShiftMultiplyEncryption = new ShiftMultiplyEncryption();
+        }
+        return instanceShiftMultiplyEncryption;
+    }
+
 
     private int generatePrimeNum(int intKey) {
 

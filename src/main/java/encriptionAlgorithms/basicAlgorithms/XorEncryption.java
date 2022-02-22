@@ -3,7 +3,18 @@ package encriptionAlgorithms.basicAlgorithms;
 import keys.IKey;
 import keys.IntKey;
 
+
+//singleton class
 public class XorEncryption extends BasicEncryption {
+
+    static XorEncryption instanceXorEncryption = null;
+    private XorEncryption() {}
+    public static XorEncryption createXorEncryption(){
+        if (instanceXorEncryption == null){
+            instanceXorEncryption = new XorEncryption();
+        }
+        return instanceXorEncryption;
+    }
 
     // encrypt the plaintext with the key and return the ciphertext
     @Override

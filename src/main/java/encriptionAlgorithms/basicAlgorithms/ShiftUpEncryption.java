@@ -3,8 +3,24 @@ package encriptionAlgorithms.basicAlgorithms;
 import keys.IKey;
 import keys.IntKey;
 
-
+//singleton class
 public class ShiftUpEncryption extends BasicEncryption {
+
+    static ShiftUpEncryption instanceShiftUpEncryption = null;
+
+    private ShiftUpEncryption() {
+    }
+
+    public static ShiftUpEncryption createShiftUpEncryption(){
+        if (instanceShiftUpEncryption == null)
+        {
+            instanceShiftUpEncryption = new ShiftUpEncryption();
+        }
+        return instanceShiftUpEncryption;
+    }
+
+
+
     // encrypt the plaintext with the key and return the ciphertext
     @Override
     public char encryptChar(char plainChar, IKey key) {
