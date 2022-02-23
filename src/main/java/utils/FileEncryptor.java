@@ -6,11 +6,8 @@ import exceptions.InvalidEncryptionKeyException;
 import keys.DoubleKey;
 import keys.IKey;
 import keys.IntKey;
-import org.w3c.dom.ranges.RangeException;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -24,8 +21,8 @@ public class FileEncryptor {
     private IKey BuildKey(List<Integer> keys) throws InvalidEncryptionKeyException {
         if (keys.size() == 1) {
             int key = keys.get(0);
-            if(key < 0 || key > UPPER_LIMIT) {
-                throw new InvalidEncryptionKeyException(key,"The key should be between 0 to "+UPPER_LIMIT);
+            if (key < 0 || key > UPPER_LIMIT) {
+                throw new InvalidEncryptionKeyException(key, "The key should be between 0 to " + UPPER_LIMIT);
             }
             return new IntKey(key);
 
@@ -54,7 +51,7 @@ public class FileEncryptor {
         try {
             return BuildKey(keys);
         } catch (InvalidEncryptionKeyException e) {
-            throw new Exception("the randomizer doesn't work property");
+            throw new Exception("The randomizer doesn't work properly because:" + e);
         }
     }
 
@@ -91,7 +88,7 @@ public class FileEncryptor {
         File cipherFile;
 
 
-        keyFile = FileStream.createFile(Paths.get(keyPath.toString() ,"key.txt"));
+        keyFile = FileStream.createFile(Paths.get(keyPath.toString(), "key.txt"));
         cipherFile = FileStream.createFile(outputFilePath);
 
         assert key != null;
@@ -103,9 +100,9 @@ public class FileEncryptor {
         String cipherText = FileStream.getFileContent(encryptedFilePath);
 
         List<Integer> keys = FileStream.getListOfIntegers(keyPath);
-        int numberOfKey = ((EncryptionAlgorithmImpl)encryptionAlgorithm).getNumberOfKeys();
-        if(numberOfKey != keys.size()) {
-            throw new InvalidEncryptionKeyException("Number of keys: "+keys.size()+"  \nExpected number of key: "+numberOfKey);
+        int numberOfKey = ((EncryptionAlgorithmImpl) encryptionAlgorithm).getNumberOfKeys();
+        if (numberOfKey != keys.size()) {
+            throw new InvalidEncryptionKeyException("Number of keys: " + keys.size() + "  \nExpected number of key: " + numberOfKey);
         }
         IKey key = BuildKey(keys);
 
