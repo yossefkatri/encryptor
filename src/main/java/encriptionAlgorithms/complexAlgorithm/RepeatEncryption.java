@@ -34,6 +34,6 @@ public class RepeatEncryption extends EncryptionAlgorithmImpl {
 
     @Override
     public int getKeyStrength() {
-        return times* encryptionAlgorithm.getKeyStrength();
+        return times * encryptionAlgorithm.getKeyStrength();
     }
 }
