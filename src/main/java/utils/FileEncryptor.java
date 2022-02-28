@@ -38,6 +38,9 @@ public class FileEncryptor {
         return new DoubleKey(key1, key2);
     }
 
+
+
+
     private IKey getKeys() throws Exception {
         //get the necessary number of the keys
         int numKeys = ((EncryptionAlgorithmImpl) encryptionAlgorithm).getNumberOfKeys();
