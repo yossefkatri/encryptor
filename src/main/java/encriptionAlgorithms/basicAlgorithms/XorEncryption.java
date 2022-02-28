@@ -8,7 +8,9 @@ import keys.IntKey;
 public class XorEncryption extends BasicEncryption {
 
     static XorEncryption instanceXorEncryption = null;
-    private XorEncryption() {}
+    private XorEncryption() {
+        UPPER_LIMIT = 99999;
+    }
     public static XorEncryption getInstance(){
         if (instanceXorEncryption == null){
             instanceXorEncryption = new XorEncryption();
@@ -32,6 +34,6 @@ public class XorEncryption extends BasicEncryption {
 
     @Override
     public int getKeyStrength() {
-        return 6;
+        return Integer.toString(UPPER_LIMIT).length();
     }
 }

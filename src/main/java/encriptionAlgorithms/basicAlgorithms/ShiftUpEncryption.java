@@ -9,6 +9,7 @@ public class ShiftUpEncryption extends BasicEncryption {
     static ShiftUpEncryption instanceShiftUpEncryption = null;
 
     private ShiftUpEncryption() {
+        UPPER_LIMIT = 999;
     }
 
     public static ShiftUpEncryption getInstance(){
@@ -18,8 +19,6 @@ public class ShiftUpEncryption extends BasicEncryption {
         }
         return instanceShiftUpEncryption;
     }
-
-
 
     // encrypt the plaintext with the key and return the ciphertext
     @Override
@@ -36,6 +35,6 @@ public class ShiftUpEncryption extends BasicEncryption {
 
     @Override
     public int getKeyStrength() {
-        return 5;
+        return Integer.toString(UPPER_LIMIT).length();
     }
 }

@@ -19,7 +19,7 @@ class EncryptionComparatorTest {
         IEncryptionAlgorithm encryptionAlgorithm2 = mock(IEncryptionAlgorithm.class);
         when(encryptionAlgorithm1.getKeyStrength()).thenReturn(3);
         when(encryptionAlgorithm2.getKeyStrength()).thenReturn(4);
-        assertEquals(-1,encryptionComparator.compare(encryptionAlgorithm1,encryptionAlgorithm2));
+        assertTrue( encryptionComparator.compare(encryptionAlgorithm1, encryptionAlgorithm2)<0);
     }
 
     @Test
@@ -28,7 +28,7 @@ class EncryptionComparatorTest {
         IEncryptionAlgorithm encryptionAlgorithm2 = mock(IEncryptionAlgorithm.class);
         when(encryptionAlgorithm1.getKeyStrength()).thenReturn(3);
         when(encryptionAlgorithm2.getKeyStrength()).thenReturn(4);
-        assertEquals(1,encryptionComparator.compare(encryptionAlgorithm2,encryptionAlgorithm1));
+        assertTrue( encryptionComparator.compare(encryptionAlgorithm2, encryptionAlgorithm1)>0);
     }
 
     @Test
@@ -37,7 +37,7 @@ class EncryptionComparatorTest {
         IEncryptionAlgorithm encryptionAlgorithm2 = mock(IEncryptionAlgorithm.class);
         when(encryptionAlgorithm1.getKeyStrength()).thenReturn(4);
         when(encryptionAlgorithm2.getKeyStrength()).thenReturn(4);
-        assertEquals(0,encryptionComparator.compare(encryptionAlgorithm2,encryptionAlgorithm1));
+        assertEquals(0, encryptionComparator.compare(encryptionAlgorithm2, encryptionAlgorithm1));
     }
 
     @Test

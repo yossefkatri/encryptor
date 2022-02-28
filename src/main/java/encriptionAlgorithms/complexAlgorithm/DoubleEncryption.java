@@ -32,6 +32,6 @@ public class DoubleEncryption extends EncryptionAlgorithmImpl {
 
     @Override
     public int getKeyStrength() {
-        return 2*encryptionAlgorithm.getKeyStrength()+1;
+        return 2*encryptionAlgorithm.getKeyStrength();
     }
 }

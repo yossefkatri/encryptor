@@ -4,6 +4,7 @@ import exceptions.InvalidEncryptionKeyException;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -43,7 +44,7 @@ class FileStreamTest {
     }
 
     @Test
-    void getListOfIntegers() {
+    void getKeys() {
         Path Path = Paths.get("C:\\Users\\Yossef Katri\\IdeaProjects\\encryptor\\src\\main\\java\\outputFiles\\tested2.txt");
         try {
             FileWriter fileWriter = new FileWriter(Path.toString());
@@ -79,17 +80,17 @@ class FileStreamTest {
     }
 
     @Test
-    void getFileContent() {
+    void readFileContent() {
         String userDirectory = Paths.get("src\\main\\java\\outputFiles").toAbsolutePath().toString();
 
         Path Path = Paths.get(userDirectory,"tested1.txt");
         FileWriter fileWriter;
         try {
             fileWriter = new FileWriter(Path.toString());
-            fileWriter.write("1324\n455667\n5555");
+            fileWriter.write("1ב324\n455667\n5555");
             fileWriter.close();
             String content = FileStream.readFileContent(Path);
-            assertEquals("1324\n455667\n5555",content);
+            assertEquals("1ב324\n455667\n5555",content);
         } catch (IOException e) {
             fail();
         }
@@ -100,7 +101,7 @@ class FileStreamTest {
         String userDirectory = Paths.get("src\\main\\java\\outputFiles").toAbsolutePath().toString();
 
         Path Path = Paths.get(userDirectory,"tested.txt");
-       assertThrows(FileNotFoundException.class,()->FileStream.readFileContent(Path));
+       assertThrows(NoSuchFileException.class,()->FileStream.readFileContent(Path));
     }
 
     @Test

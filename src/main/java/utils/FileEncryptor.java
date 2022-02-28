@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Random;
 
 public class FileEncryptor {
-    private static final int UPPER_LIMIT = 5000;
+    private static final int UPPER_LIMIT = 500;
     final IEncryptionAlgorithm encryptionAlgorithm;
 
     private IKey BuildKey(List<Integer> keys) throws InvalidEncryptionKeyException {
@@ -26,7 +26,8 @@ public class FileEncryptor {
             }
             return new IntKey(key);
 
-        } else if (keys.size() == 0) {
+        }
+        else if (keys.size() == 0) {
             return null;
         }
         IKey key1;
@@ -37,9 +38,6 @@ public class FileEncryptor {
 
         return new DoubleKey(key1, key2);
     }
-
-
-
 
     private IKey getKeys() throws Exception {
         //get the necessary number of the keys
@@ -53,8 +51,10 @@ public class FileEncryptor {
         }
         try {
             return BuildKey(keys);
-        } catch (InvalidEncryptionKeyException e) {
-            throw new Exception("The randomizer doesn't work properly because:" + e);
+        }
+        catch (InvalidEncryptionKeyException e) {
+            e.addInfo("The problem is about the randomizer");
+            throw e;
         }
     }
 

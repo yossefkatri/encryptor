@@ -10,6 +10,7 @@ public class ShiftMultiplyEncryption extends BasicEncryption {
 
     static ShiftMultiplyEncryption instanceShiftMultiplyEncryption = null;
     private ShiftMultiplyEncryption() {
+        UPPER_LIMIT = 9999;
     }
     public static ShiftMultiplyEncryption getInstance() {
         if (instanceShiftMultiplyEncryption == null)
@@ -71,7 +72,7 @@ public class ShiftMultiplyEncryption extends BasicEncryption {
 
     @Override
     public int getKeyStrength() {
-        return 4;
+        return Integer.toString(UPPER_LIMIT).length();
     }
 
 }

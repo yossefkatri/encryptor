@@ -1,5 +1,8 @@
 package utils;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -54,8 +57,6 @@ public final class FileStream {
                 items.add(item);
             }
             return items;
-        }catch (FileNotFoundException ex) {
-            throw new FileNotFoundException("The source file isn't found. \n File: "+keyFilePath.getFileName()+"\n Error:"+ ex.getMessage());
         }
         catch (NumberFormatException ex) {
             throw new InvalidEncryptionKeyException("The item isn't a pure number.\n"+ex.getMessage());
@@ -63,19 +64,11 @@ public final class FileStream {
     }
 
     //get the  message from the file
-    public static String readFileContent(Path filePath) throws FileNotFoundException {
-        File file = new File(filePath.toString());
+    public static String readFileContent(Path filePath) throws IOException {
+        Charset charset = StandardCharsets.UTF_8;
+        List<String> lines = Files.readAllLines(filePath, charset);
+        return String.join("\n",lines);
 
-        try (Scanner fileReader = new Scanner(file)){
-            StringBuilder message = new StringBuilder();
-            while (fileReader.hasNextLine()) {
-                message.append(fileReader.nextLine()).append("\n");
-            }
-            message.deleteCharAt(message.length()-1);
-            return message.toString();
-        }catch (FileNotFoundException ex){
-            throw new FileNotFoundException("The source file isn't found. \n File: "+filePath.getFileName()+"\n Error:"+ ex.getMessage());
-        }
     }
 
     // save the data on the file
