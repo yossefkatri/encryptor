@@ -12,6 +12,11 @@ public class ShiftUpEncryption extends BasicEncryption {
         UPPER_LIMIT = 999;
     }
 
+    @Override
+    public String toString() {
+        return "{ShiftUpEncryption}";
+    }
+
     public static ShiftUpEncryption getInstance(){
         if (instanceShiftUpEncryption == null)
         {

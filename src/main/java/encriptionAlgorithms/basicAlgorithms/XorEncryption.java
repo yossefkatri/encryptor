@@ -11,6 +11,12 @@ public class XorEncryption extends BasicEncryption {
     private XorEncryption() {
         UPPER_LIMIT = 99999;
     }
+
+    @Override
+    public String toString() {
+        return "{XorEncryption}";
+    }
+
     public static XorEncryption getInstance(){
         if (instanceXorEncryption == null){
             instanceXorEncryption = new XorEncryption();

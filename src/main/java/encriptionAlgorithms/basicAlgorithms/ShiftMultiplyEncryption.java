@@ -12,6 +12,12 @@ public class ShiftMultiplyEncryption extends BasicEncryption {
     private ShiftMultiplyEncryption() {
         UPPER_LIMIT = 9999;
     }
+
+    @Override
+    public String toString() {
+        return "{ShiftMultiplyEncryption}";
+    }
+
     public static ShiftMultiplyEncryption getInstance() {
         if (instanceShiftMultiplyEncryption == null)
         {
