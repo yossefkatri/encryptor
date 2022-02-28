@@ -43,7 +43,7 @@ public final class FileStream {
     }
 
     //get the key file
-    public static List<Integer> getListOfIntegers(Path keyFilePath) throws FileNotFoundException, InvalidEncryptionKeyException {
+    public static List<Integer> readKeys(Path keyFilePath) throws FileNotFoundException, InvalidEncryptionKeyException {
         File keyFile = new File(keyFilePath.toString());
         //read the key from the file
         try(Scanner itemReader = new Scanner(keyFile)) {
@@ -63,7 +63,7 @@ public final class FileStream {
     }
 
     //get the  message from the file
-    public static String getFileContent(Path filePath) throws FileNotFoundException {
+    public static String readFileContent(Path filePath) throws FileNotFoundException {
         File file = new File(filePath.toString());
 
         try (Scanner fileReader = new Scanner(file)){

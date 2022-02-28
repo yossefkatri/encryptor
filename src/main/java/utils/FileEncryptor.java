@@ -77,7 +77,7 @@ public class FileEncryptor {
 
     public void encryptFile(Path originalFilePath, Path outputFilePath, Path keyPath) throws Exception {
         String plainText;
-        plainText = FileStream.getFileContent(originalFilePath);
+        plainText = FileStream.readFileContent(originalFilePath);
 
         IKey key = getKeys();
 
@@ -97,12 +97,12 @@ public class FileEncryptor {
     }
 
     public void decryptFile(Path encryptedFilePath, Path outputFilePath, Path keyPath) throws Exception {
-        String cipherText = FileStream.getFileContent(encryptedFilePath);
+        String cipherText = FileStream.readFileContent(encryptedFilePath);
 
-        List<Integer> keys = FileStream.getListOfIntegers(keyPath);
-        int numberOfKey = ((EncryptionAlgorithmImpl) encryptionAlgorithm).getNumberOfKeys();
-        if (numberOfKey != keys.size()) {
-            throw new InvalidEncryptionKeyException("Number of keys: " + keys.size() + "  \nExpected number of key: " + numberOfKey);
+        List<Integer> keys = FileStream.readKeys(keyPath);
+        int numberOfKeys = ((EncryptionAlgorithmImpl) encryptionAlgorithm).getNumberOfKeys();
+        if (numberOfKeys != keys.size()) {
+            throw new InvalidEncryptionKeyException("Number of keys: " + keys.size() + "  \nExpected number of key: " + numberOfKeys);
         }
         IKey key = BuildKey(keys);
 

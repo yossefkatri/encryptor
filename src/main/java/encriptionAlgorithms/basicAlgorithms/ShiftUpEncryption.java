@@ -11,7 +11,7 @@ public class ShiftUpEncryption extends BasicEncryption {
     private ShiftUpEncryption() {
     }
 
-    public static ShiftUpEncryption createShiftUpEncryption(){
+    public static ShiftUpEncryption getInstance(){
         if (instanceShiftUpEncryption == null)
         {
             instanceShiftUpEncryption = new ShiftUpEncryption();
@@ -36,6 +36,6 @@ public class ShiftUpEncryption extends BasicEncryption {
 
     @Override
     public int getKeyStrength() {
-        return 1;
+        return 5;
     }
 }

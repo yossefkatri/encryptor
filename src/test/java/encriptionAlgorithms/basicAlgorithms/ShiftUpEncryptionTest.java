@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ShiftUpEncryptionTest {
 
-    final ShiftUpEncryption testedEncryption = ShiftUpEncryption.createShiftUpEncryption();
+    final ShiftUpEncryption testedEncryption = ShiftUpEncryption.getInstance();
 
     @Test
     void encryptCharAsciiTest() {

@@ -49,7 +49,7 @@ class FileStreamTest {
             FileWriter fileWriter = new FileWriter(Path.toString());
             fileWriter.write("1324\n455667\n5555");
             fileWriter.close();
-            List<Integer> content = FileStream.getListOfIntegers(Path);
+            List<Integer> content = FileStream.readKeys(Path);
             List<Integer> expected = Arrays.asList(1324,455667,5555);
             assertEquals(expected,content);
         } catch (Exception e) {
@@ -61,17 +61,18 @@ class FileStreamTest {
     @Test
     void getListOfIntegersFileNotFoundException() {
         Path Path = Paths.get("C:\\Users\\Yossef Katri\\IdeaProjects\\encryptor\\src\\main\\java\\outputFiles\\tested.txt");
-        assertThrows(FileNotFoundException.class,()->FileStream.getListOfIntegers(Path));
+        assertThrows(FileNotFoundException.class,()->FileStream.readKeys(Path));
     }
 
     @Test
     void getListOfIntegersInvalidEncryptionKeyException() {
-        Path Path = Paths.get("C:\\Users\\Yossef Katri\\IdeaProjects\\encryptor\\src\\main\\java\\outputFiles\\tested9.txt");
+        String userDirectory = Paths.get("src\\main\\java\\outputFiles").toAbsolutePath().toString();
+        Path Path = Paths.get(userDirectory,"tested9.txt");
         try {
             FileWriter fileWriter = new FileWriter(Path.toString());
             fileWriter.write("1324\n45s56d67\n55a55");
             fileWriter.close();
-            assertThrows(InvalidEncryptionKeyException.class,()->FileStream.getListOfIntegers(Path));
+            assertThrows(InvalidEncryptionKeyException.class,()->FileStream.readKeys(Path));
         } catch (Exception e) {
             fail();
         }
@@ -79,13 +80,15 @@ class FileStreamTest {
 
     @Test
     void getFileContent() {
-        Path Path = Paths.get("C:\\Users\\Yossef Katri\\IdeaProjects\\encryptor\\src\\main\\java\\outputFiles\\tested1.txt");
+        String userDirectory = Paths.get("src\\main\\java\\outputFiles").toAbsolutePath().toString();
+
+        Path Path = Paths.get(userDirectory,"tested1.txt");
         FileWriter fileWriter;
         try {
             fileWriter = new FileWriter(Path.toString());
             fileWriter.write("1324\n455667\n5555");
             fileWriter.close();
-            String content = FileStream.getFileContent(Path);
+            String content = FileStream.readFileContent(Path);
             assertEquals("1324\n455667\n5555",content);
         } catch (IOException e) {
             fail();
@@ -94,13 +97,17 @@ class FileStreamTest {
 
     @Test
     void getFileContentFileNotFound() {
-        Path Path = Paths.get("C:\\Users\\Yossef Katri\\IdeaProjects\\encryptor\\src\\main\\java\\outputFiles\\tested.txt");
-       assertThrows(FileNotFoundException.class,()->FileStream.getFileContent(Path));
+        String userDirectory = Paths.get("src\\main\\java\\outputFiles").toAbsolutePath().toString();
+
+        Path Path = Paths.get(userDirectory,"tested.txt");
+       assertThrows(FileNotFoundException.class,()->FileStream.readFileContent(Path));
     }
 
     @Test
     void saveData() {
-        Path path = Paths.get("C:\\Users\\Yossef Katri\\IdeaProjects\\encryptor\\src\\main\\java\\outputFiles\\tested4.txt");
+        String userDirectory = Paths.get("src\\main\\java\\outputFiles").toAbsolutePath().toString();
+
+        Path path = Paths.get(userDirectory,"tested4.txt");
         File fileWriter = new File(path.toString());
         try {
             FileStream.saveData(fileWriter,"12344321");
@@ -118,7 +125,9 @@ class FileStreamTest {
 
     @Test
     void saveDataIOException(){
-        Path path = Paths.get("C:\\Users\\Yossef Katri\\IdeaProjects\\encryptor\\src\\main\\java\\outputFiles");
+        String userDirectory = Paths.get("src\\main\\java\\outputFiles").toAbsolutePath().toString();
+
+        Path path = Paths.get(userDirectory);
         File file = new File(path.toString());
         assertThrows(IOException.class,()->FileStream.saveData(file,"tested"));
     }

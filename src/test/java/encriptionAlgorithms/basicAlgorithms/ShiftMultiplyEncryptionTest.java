@@ -7,7 +7,7 @@ import static org.testng.Assert.assertEquals;
 
 class ShiftMultiplyEncryptionTest {
 
-    final ShiftMultiplyEncryption testedEncryption = ShiftMultiplyEncryption.CreateShiftMultiplyEncryption();
+    final ShiftMultiplyEncryption testedEncryption = ShiftMultiplyEncryption.getInstance();
 
 
     @Test

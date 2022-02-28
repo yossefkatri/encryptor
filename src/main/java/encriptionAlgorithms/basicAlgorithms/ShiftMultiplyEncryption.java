@@ -11,8 +11,7 @@ public class ShiftMultiplyEncryption extends BasicEncryption {
     static ShiftMultiplyEncryption instanceShiftMultiplyEncryption = null;
     private ShiftMultiplyEncryption() {
     }
-
-    public static ShiftMultiplyEncryption CreateShiftMultiplyEncryption() {
+    public static ShiftMultiplyEncryption getInstance() {
         if (instanceShiftMultiplyEncryption == null)
         {
             instanceShiftMultiplyEncryption = new ShiftMultiplyEncryption();
@@ -72,7 +71,7 @@ public class ShiftMultiplyEncryption extends BasicEncryption {
 
     @Override
     public int getKeyStrength() {
-        return 3;
+        return 4;
     }
 
 }

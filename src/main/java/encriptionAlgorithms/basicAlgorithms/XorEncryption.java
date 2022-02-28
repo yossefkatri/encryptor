@@ -9,7 +9,7 @@ public class XorEncryption extends BasicEncryption {
 
     static XorEncryption instanceXorEncryption = null;
     private XorEncryption() {}
-    public static XorEncryption createXorEncryption(){
+    public static XorEncryption getInstance(){
         if (instanceXorEncryption == null){
             instanceXorEncryption = new XorEncryption();
         }
@@ -32,6 +32,6 @@ public class XorEncryption extends BasicEncryption {
 
     @Override
     public int getKeyStrength() {
-        return 2;
+        return 6;
     }
 }

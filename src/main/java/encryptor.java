@@ -17,7 +17,7 @@ public class encryptor {
             System.out.println("menu: \n 1: encryption \n 2: decryption");
             int input = scanner.nextInt();
             scanner.nextLine();
-            IEncryptionAlgorithm encryptionAlgorithm =new RepeatEncryption(XorEncryption.createXorEncryption(),5);
+            IEncryptionAlgorithm encryptionAlgorithm =new RepeatEncryption(XorEncryption.getInstance(),5);
             FileEncryptor fileEncryptor = new FileEncryptor(encryptionAlgorithm);
             if (input == 1) {
                 //get the file-path from the user
@@ -31,7 +31,7 @@ public class encryptor {
                 Path outputFilepath = FileStream.getFileName(path, "_encrypted");
 
                     fileEncryptor.encryptFile(path,outputFilepath,filesPath);
-                    System.out.println("the locations of the key file and the encrypted file :" + filesPath + "\n");
+                    System.out.println("The locations of the key file and the encrypted file :" + filesPath + "\n");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
