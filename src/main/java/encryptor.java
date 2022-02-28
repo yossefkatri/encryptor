@@ -18,29 +18,24 @@ public class encryptor {
             System.out.println("menu: \n 1: encryption \n 2: decryption");
             int input = scanner.nextInt();
             scanner.nextLine();
-            IEncryptionAlgorithm encryptionAlgorithm =new RepeatEncryption(new XorEncryption(),5);
+            IEncryptionAlgorithm encryptionAlgorithm =new DoubleEncryption(new DoubleEncryption( new DoubleEncryption(XorEncryption.getInstance())));
             FileEncryptor fileEncryptor = new FileEncryptor(encryptionAlgorithm);
             if (input == 1) {
                 //get the file-path from the user
                 System.out.println("Enter the path of your source file:");
                 String stringPath = scanner.nextLine();
                 stringPath = stringPath.replaceAll("\"", "");
-
+                try {
                 Path path = Paths.get(stringPath);
                 //calculate the path
-                Path filesPath = FileStream.getOutputFilesPath(path);
+                Path filesPath = path.getParent();
                 Path outputFilepath = FileStream.getFileName(path, "_encrypted");
 
-                try {
                     fileEncryptor.encryptFile(path,outputFilepath,filesPath);
+                    System.out.println("The locations of the key file and the encrypted file :" + filesPath + "\n");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-
-                System.out.println("the locations of the key file and the encrypted file :" + filesPath + "\n");
-
-
             }
             else if (input == 2) {
                 //get the encrypted-file-path from the user
@@ -53,12 +48,12 @@ public class encryptor {
                 String keyPathInput = scanner.nextLine();
                 keyPathInput = keyPathInput.replaceAll("\"", "");
 
-
+                try {
                 Path encryptedFilePath = Paths.get(encryptedFilePathInput);
                 Path decryptedFilePath = FileStream.getFileName(encryptedFilePath,"_decrypted");
                 Path keyPath = Paths.get(keyPathInput);
 
-                try {
+
                     fileEncryptor.decryptFile(encryptedFilePath,decryptedFilePath,keyPath);
                 } catch (Exception e) {
                     e.printStackTrace();

@@ -5,7 +5,21 @@ import keys.IntKey;
 
 import java.math.BigInteger;
 
+//singleton class
 public class ShiftMultiplyEncryption extends BasicEncryption {
+
+    static ShiftMultiplyEncryption instanceShiftMultiplyEncryption = null;
+    private ShiftMultiplyEncryption() {
+        UPPER_LIMIT = 9999;
+    }
+    public static ShiftMultiplyEncryption getInstance() {
+        if (instanceShiftMultiplyEncryption == null)
+        {
+            instanceShiftMultiplyEncryption = new ShiftMultiplyEncryption();
+        }
+        return instanceShiftMultiplyEncryption;
+    }
+
 
     private int generatePrimeNum(int intKey) {
 
@@ -54,6 +68,11 @@ public class ShiftMultiplyEncryption extends BasicEncryption {
         BigInteger inverse =(bigKey.modInverse(bigModulo));
 
         return (char) ((ciphertext*inverse.intValue())%ConstantsEncryption.MAX_CHAR);
+    }
+
+    @Override
+    public int getKeyStrength() {
+        return Integer.toString(UPPER_LIMIT).length();
     }
 
 }

@@ -2,11 +2,12 @@ package utils;
 
 import encriptionAlgorithms.EncryptionAlgorithmImpl;
 import encriptionAlgorithms.IEncryptionAlgorithm;
+import exceptions.InvalidEncryptionKeyException;
 import keys.DoubleKey;
 import keys.IKey;
 import keys.IntKey;
 
-import java.io.FileWriter;
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -14,14 +15,19 @@ import java.util.List;
 import java.util.Random;
 
 public class FileEncryptor {
-    private static final int UPPER_LIMIT = 5000;
+    private static final int UPPER_LIMIT = 500;
     final IEncryptionAlgorithm encryptionAlgorithm;
 
-    private IKey BuildKey(List<Integer> keys) {
+    private IKey BuildKey(List<Integer> keys) throws InvalidEncryptionKeyException {
         if (keys.size() == 1) {
-            return new IntKey(keys.get(0));
+            int key = keys.get(0);
+            if (key < 0 || key > UPPER_LIMIT) {
+                throw new InvalidEncryptionKeyException(key, "The key should be between 0 to " + UPPER_LIMIT);
+            }
+            return new IntKey(key);
 
-        } else if (keys.size() == 0) {
+        }
+        else if (keys.size() == 0) {
             return null;
         }
         IKey key1;
@@ -33,7 +39,7 @@ public class FileEncryptor {
         return new DoubleKey(key1, key2);
     }
 
-    private IKey getKeys() {
+    private IKey getKeys() throws Exception {
         //get the necessary number of the keys
         int numKeys = ((EncryptionAlgorithmImpl) encryptionAlgorithm).getNumberOfKeys();
         List<Integer> keys = new ArrayList<>();
@@ -43,7 +49,13 @@ public class FileEncryptor {
             int tempKey = randomizer.nextInt(UPPER_LIMIT);
             keys.add(tempKey);
         }
-        return BuildKey(keys);
+        try {
+            return BuildKey(keys);
+        }
+        catch (InvalidEncryptionKeyException e) {
+            e.addInfo("The problem is about the randomizer");
+            throw e;
+        }
     }
 
     private String encrypt(String plaintext, IKey key) {
@@ -68,47 +80,40 @@ public class FileEncryptor {
 
     public void encryptFile(Path originalFilePath, Path outputFilePath, Path keyPath) throws Exception {
         String plainText;
-        plainText = FileStream.getFileContent(originalFilePath);
+        plainText = FileStream.readFileContent(originalFilePath);
 
         IKey key = getKeys();
 
 
         String cipherText = encrypt(plainText, key);
 
-        FileWriter keyWriter;
-        FileWriter cipherWriter;
+        File keyFile;
+        File cipherFile;
 
 
-        keyWriter = FileStream.createFile(Paths.get(keyPath.toString() ,"key.txt"));
-        cipherWriter = FileStream.createFile(outputFilePath);
-
+        keyFile = FileStream.createFile(Paths.get(keyPath.toString(), "key.txt"));
+        cipherFile = FileStream.createFile(outputFilePath);
 
         assert key != null;
-        FileStream.saveData(keyWriter, key.toString());
-        FileStream.saveData(cipherWriter, cipherText);
-
-
-        keyWriter.close();
-        cipherWriter.close();
+        FileStream.saveData(keyFile, key.toString());
+        FileStream.saveData(cipherFile, cipherText);
     }
 
     public void decryptFile(Path encryptedFilePath, Path outputFilePath, Path keyPath) throws Exception {
-        String cipherText;
-        cipherText = FileStream.getFileContent(encryptedFilePath);
+        String cipherText = FileStream.readFileContent(encryptedFilePath);
 
-        List<Integer> keys;
-        keys = FileStream.getListOfIntegers(keyPath);
-
-
+        List<Integer> keys = FileStream.readKeys(keyPath);
+        int numberOfKeys = ((EncryptionAlgorithmImpl) encryptionAlgorithm).getNumberOfKeys();
+        if (numberOfKeys != keys.size()) {
+            throw new InvalidEncryptionKeyException("Number of keys: " + keys.size() + "  \nExpected number of key: " + numberOfKeys);
+        }
         IKey key = BuildKey(keys);
 
         String decryptMessage = decrypt(cipherText, key);
-        FileWriter decryptedFile;
+        File decryptedFile;
         decryptedFile = FileStream.createFile(outputFilePath);
 
         FileStream.saveData(decryptedFile, decryptMessage);
-
-        decryptedFile.close();
     }
 
 }

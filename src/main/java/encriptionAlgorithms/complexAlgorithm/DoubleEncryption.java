@@ -29,4 +29,9 @@ public class DoubleEncryption extends EncryptionAlgorithmImpl {
         plainChar = encryptionAlgorithm.decryptChar(plainChar, ((DoubleKey) key).getKey1());
         return plainChar;
     }
+
+    @Override
+    public int getKeyStrength() {
+        return 2*encryptionAlgorithm.getKeyStrength();
+    }
 }
