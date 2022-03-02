@@ -18,18 +18,24 @@ import java.util.Random;
 public class FileEncryptor {
     private static final int UPPER_LIMIT = 500;
     final IEncryptionAlgorithm encryptionAlgorithm;
+
     final StateChangeSupport stateChangeSupport = new StateChangeSupport();
 
-    private IKey buildKey(List<Integer> keys) throws InvalidEncryptionKeyException {
+    private void checkKeys(List<Integer> keys) throws InvalidEncryptionKeyException {
+        for (Integer key : keys) {
+            if (key < 0 || key.toString().length() > encryptionAlgorithm.getKeyStrength())
+            {
+                throw new InvalidEncryptionKeyException(key, "The key should be between 0 to " + encryptionAlgorithm.getKeyStrength() +"digits");
+            }
+        }
+    }
+
+    private IKey buildKey(List<Integer> keys) {
         if (keys.size() == 1) {
             int key = keys.get(0);
-            if (key < 0 || key > UPPER_LIMIT) {
-                throw new InvalidEncryptionKeyException(key, "The key should be between 0 to " + UPPER_LIMIT);
-            }
             return new IntKey(key);
 
-        }
-        else if (keys.size() == 0) {
+        } else if (keys.size() == 0) {
             return null;
         }
         IKey key1;
@@ -41,7 +47,7 @@ public class FileEncryptor {
         return new DoubleKey(key1, key2);
     }
 
-    private IKey getKeys() throws Exception {
+    private IKey getKeys()  {
         //get the necessary number of the keys
         int numKeys = ((EncryptionAlgorithmImpl) encryptionAlgorithm).getNumberOfKeys();
         List<Integer> keys = new ArrayList<>();
@@ -51,13 +57,7 @@ public class FileEncryptor {
             int tempKey = randomizer.nextInt(UPPER_LIMIT);
             keys.add(tempKey);
         }
-        try {
             return buildKey(keys);
-        }
-        catch (InvalidEncryptionKeyException e) {
-            e.addInfo("The problem is about the randomizer");
-            throw e;
-        }
     }
 
     private String encrypt(String plaintext, IKey key) {
@@ -81,16 +81,13 @@ public class FileEncryptor {
     }
 
     public void encryptFile(Path originalFilePath, Path outputFilePath, Path keyPath) throws Exception {
-        stateChangeSupport.notifyEncryptionStartedListeners(this, LocalDateTime.now(),encryptionAlgorithm.toString(),originalFilePath);
+        stateChangeSupport.notifyEncryptionStartedListeners(this, LocalDateTime.now(), encryptionAlgorithm.toString(), outputFilePath, originalFilePath, Paths.get(keyPath.toString(), "key.txt"));
 
         String plainText;
         plainText = FileStream.readFileContent(originalFilePath);
-
         IKey key = getKeys();
 
-
         String cipherText = encrypt(plainText, key);
-
         File keyFile;
         File cipherFile;
 
@@ -102,11 +99,11 @@ public class FileEncryptor {
         FileStream.saveData(keyFile, key.toString());
         FileStream.saveData(cipherFile, cipherText);
 
-        stateChangeSupport.notifyEncryptionEndedListeners(this, LocalDateTime.now(), outputFilePath, keyPath);
+        stateChangeSupport.notifyEncryptionEndedListeners(this, LocalDateTime.now(), encryptionAlgorithm.toString(), outputFilePath, originalFilePath, Paths.get(keyPath.toString(), "key.txt"));
     }
 
     public void decryptFile(Path encryptedFilePath, Path outputFilePath, Path keyPath) throws Exception {
-        stateChangeSupport.notifyDecryptionStartedListeners(this,LocalDateTime.now(),encryptionAlgorithm.toString(),encryptedFilePath,keyPath);
+        stateChangeSupport.notifyDecryptionStartedListeners(this, LocalDateTime.now(), encryptionAlgorithm.toString(), outputFilePath, encryptedFilePath, keyPath);
         String cipherText = FileStream.readFileContent(encryptedFilePath);
 
         List<Integer> keys = FileStream.readKeys(keyPath);
@@ -114,6 +111,8 @@ public class FileEncryptor {
         if (numberOfKeys != keys.size()) {
             throw new InvalidEncryptionKeyException("Number of keys: " + keys.size() + "  \nExpected number of key: " + numberOfKeys);
         }
+
+        checkKeys(keys);
         IKey key = buildKey(keys);
 
         String decryptMessage = decrypt(cipherText, key);
@@ -121,7 +120,11 @@ public class FileEncryptor {
         decryptedFile = FileStream.createFile(outputFilePath);
 
         FileStream.saveData(decryptedFile, decryptMessage);
-        stateChangeSupport.notifyDecryptionEndedListeners(this,LocalDateTime.now(),outputFilePath);
+        stateChangeSupport.notifyDecryptionEndedListeners(this, LocalDateTime.now(), encryptionAlgorithm.toString(), outputFilePath, encryptedFilePath, keyPath);
+    }
+
+    public StateChangeSupport getStateChangeSupport() {
+        return stateChangeSupport;
     }
 
 }

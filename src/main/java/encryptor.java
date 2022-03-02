@@ -2,6 +2,7 @@ import encriptionAlgorithms.basicAlgorithms.*;
 import encriptionAlgorithms.IEncryptionAlgorithm;
 import encriptionAlgorithms.complexAlgorithm.DoubleEncryption;
 import encriptionAlgorithms.complexAlgorithm.RepeatEncryption;
+import observers.EncryptionLogger;
 import utils.FileEncryptor;
 import utils.FileStream;
 
@@ -20,6 +21,7 @@ public class encryptor {
             scanner.nextLine();
             IEncryptionAlgorithm encryptionAlgorithm =new DoubleEncryption(new DoubleEncryption( new DoubleEncryption(XorEncryption.getInstance())));
             FileEncryptor fileEncryptor = new FileEncryptor(encryptionAlgorithm);
+            EncryptionLogger encryptionLogger = new EncryptionLogger(fileEncryptor.getStateChangeSupport());
             if (input == 1) {
                 //get the file-path from the user
                 System.out.println("Enter the path of your source file:");

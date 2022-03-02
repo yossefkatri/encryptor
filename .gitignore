@@ -1,3 +1,4 @@
 # Project exclude paths
 /out/
 /src/main/java/outputFiles/
+/src/main/java/logs/

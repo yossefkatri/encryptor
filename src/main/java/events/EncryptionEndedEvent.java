@@ -5,9 +5,8 @@ import java.time.LocalDateTime;
 import java.util.EventObject;
 
 public class EncryptionEndedEvent extends EventObject {
-    private LocalDateTime endTime;
-    private Path encryptedFilePath;
-    private Path keyPath;
+
+    private final EncryptionLogEventArgs encryptionLogEventArgs;
 
     /**
      * Constructs a prototypical Event.
@@ -15,10 +14,17 @@ public class EncryptionEndedEvent extends EventObject {
      * @param source The object on which the Event initially occurred.
      * @throws IllegalArgumentException if source is null.
      */
-    public EncryptionEndedEvent(Object source, LocalDateTime endTime, Path EncryptedFilePath, Path KeyPath) {
+    public EncryptionEndedEvent(Object source, LocalDateTime endTime, String encryptionAlgorithmName ,Path decryptedFile, Path encryptedFile, Path keyPath) {
         super(source);
-        this.endTime = endTime;
-        encryptedFilePath = EncryptedFilePath;
-        keyPath = KeyPath;
+        encryptionLogEventArgs = new EncryptionLogEventArgs();
+        encryptionLogEventArgs.Time = endTime;
+        encryptionLogEventArgs.encryptionAlgorithmName = encryptionAlgorithmName;
+        encryptionLogEventArgs.decryptedFile = decryptedFile;
+        encryptionLogEventArgs.encryptedFile = encryptedFile;
+        encryptionLogEventArgs.keyPath = keyPath;
+    }
+
+    public EncryptionLogEventArgs getEncryptionLogEventArgs() {
+        return encryptionLogEventArgs;
     }
 }

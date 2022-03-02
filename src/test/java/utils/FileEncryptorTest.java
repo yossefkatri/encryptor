@@ -9,6 +9,7 @@ import org.mockito.MockedStatic;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -25,7 +26,7 @@ class FileEncryptorTest {
     @Test
     void encryptFileSourceFileNonExist() {
         String userDirectory = Paths.get("src\\main\\java\\outputFiles").toAbsolutePath().toString();
-         assertThrows(FileNotFoundException.class,()->testedEncryptor.encryptFile(Paths.get(userDirectory,"input1.txt"),
+         assertThrows(NoSuchFileException.class,()->testedEncryptor.encryptFile(Paths.get(userDirectory,"input1.txt"),
                 Paths.get(userDirectory, "input2.txt"),
                 Paths.get(userDirectory,"input3.txt")));
     }
@@ -33,7 +34,7 @@ class FileEncryptorTest {
     @Test
     void decryptFileSourceFileNonExist() {
         String userDirectory = Paths.get("src\\main\\java\\outputFiles").toAbsolutePath().toString();
-        assertThrows(FileNotFoundException.class,()->testedEncryptor.decryptFile(Paths.get(userDirectory,"input1.txt"),
+        assertThrows(NoSuchFileException.class,()->testedEncryptor.decryptFile(Paths.get(userDirectory,"input1.txt"),
                 Paths.get(userDirectory, "input2.txt"),
                 Paths.get(userDirectory,"input3.txt")));
     }
@@ -57,6 +58,7 @@ class FileEncryptorTest {
         String userDirectory = Paths.get("src\\main\\java\\outputFiles").toAbsolutePath().toString();
         Path keyPath = Paths.get(userDirectory, "tested");
         when(encryptionAlgorithm.getNumberOfKeys()).thenReturn(3);
+        when(encryptionAlgorithm.getKeyStrength()).thenReturn(1);
         try(MockedStatic<FileStream> fileStream = mockStatic(FileStream.class)) {
             fileStream.when(()->FileStream.readKeys(keyPath)).thenReturn(Arrays.asList(10000,2,3));
             fileStream.when(()->FileStream.readFileContent(keyPath)).thenReturn("tested");
@@ -106,6 +108,7 @@ class FileEncryptorTest {
 
         when(encryptionAlgorithm.decryptChar(any(char.class),any(IKey.class))).thenReturn('d');
         when(encryptionAlgorithm.getNumberOfKeys()).thenReturn(1);
+        when(encryptionAlgorithm.getKeyStrength()).thenReturn(54);
 
         Path sPath = Paths.get(userDirectory,"tested7.txt");
         Path keyPath = Paths.get(userDirectory,"key.txt");

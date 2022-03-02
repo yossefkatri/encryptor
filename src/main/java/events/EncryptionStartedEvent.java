@@ -6,9 +6,7 @@ import java.util.EventObject;
 
 public class EncryptionStartedEvent extends EventObject {
 
-    private LocalDateTime startTime;
-    private String encryptionAlgorithmName;
-    private Path input;
+    private final EncryptionLogEventArgs encryptionLogEventArgs;
 
     /**
      * Constructs a prototypical Event.
@@ -16,11 +14,17 @@ public class EncryptionStartedEvent extends EventObject {
      * @param source The object on which the Event initially occurred.
      * @throws IllegalArgumentException if source is null.
      */
-    public EncryptionStartedEvent(Object source, LocalDateTime startTime, String EncryptionAlgorithmName, Path inputFile) {
+    public EncryptionStartedEvent(Object source, LocalDateTime endTime, String encryptionAlgorithmName, Path decryptedFile, Path encryptedFile, Path keyPath) {
         super(source);
-        this.startTime = startTime;
-        encryptionAlgorithmName = EncryptionAlgorithmName;
+        encryptionLogEventArgs = new EncryptionLogEventArgs();
+        encryptionLogEventArgs.Time = endTime;
+        encryptionLogEventArgs.encryptionAlgorithmName = encryptionAlgorithmName;
+        encryptionLogEventArgs.decryptedFile = decryptedFile;
+        encryptionLogEventArgs.encryptedFile = encryptedFile;
+        encryptionLogEventArgs.keyPath = keyPath;
+    }
 
-        this.input = inputFile;
+    public EncryptionLogEventArgs getEncryptionLogEventArgs() {
+        return encryptionLogEventArgs;
     }
 }
