@@ -18,7 +18,6 @@ import java.util.Random;
 public class FileEncryptor {
     private static final int UPPER_LIMIT = 500;
     final IEncryptionAlgorithm encryptionAlgorithm;
-
     final StateChangeSupport stateChangeSupport = new StateChangeSupport();
 
     private void checkKeys(List<Integer> keys) throws InvalidEncryptionKeyException {

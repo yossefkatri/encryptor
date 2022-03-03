@@ -10,4 +10,17 @@ public class EncryptionLogEventArgs {
     public Path encryptedFile;
     public Path keyPath;
 
+    @Override
+    public int hashCode() {
+        return Time.hashCode() + encryptedFile.hashCode() + decryptedFile.hashCode()
+                +encryptedFile.hashCode() +keyPath.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        EncryptionLogEventArgs encryptionLogEventArgs = (EncryptionLogEventArgs) obj;
+        return Time.equals(encryptionLogEventArgs.Time)&&encryptionAlgorithmName.equals(encryptionLogEventArgs.encryptionAlgorithmName)
+                &&decryptedFile.equals(encryptionLogEventArgs.decryptedFile)&&encryptedFile.equals(encryptionLogEventArgs.encryptedFile)
+                &&keyPath.equals(encryptionLogEventArgs.keyPath);
+    }
 }

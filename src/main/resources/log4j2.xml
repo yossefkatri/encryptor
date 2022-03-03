@@ -16,7 +16,7 @@
 
         <RollingFile name="infoLog" fileName="${APP_LOG_ROOT}\app-info.log"
                      filePattern="${APP_LOG_ROOT}\app-info-%d{yyyy-MM-dd}-%i.log" >
-            <LevelRangeFilter minLevel="INFO" maxLevel="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+            <LevelRangeFilter minLevel="ERROR" maxLevel="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout pattern="${LOG_INFO_PATTERN}"/>
             <Policies>
                 <SizeBasedTriggeringPolicy size="10MB" />
@@ -26,10 +26,11 @@
     </Appenders>
 
     <Loggers>
-        <Root level="info" additivity="false">
+        <Root level="all" additivity="false">
             <AppenderRef ref="Console" />
             <AppenderRef ref="infoLog" />
         </Root>
+
     </Loggers>
 
 </Configuration>
