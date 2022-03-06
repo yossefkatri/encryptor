@@ -25,7 +25,7 @@ public class encryptor {
             int input = scanner.nextInt();
             logger.debug("choice: " + input);
             scanner.nextLine();
-            IEncryptionAlgorithm encryptionAlgorithm = new DoubleEncryption(new DoubleEncryption(new DoubleEncryption(XorEncryption.getInstance())));
+            IEncryptionAlgorithm<Integer> encryptionAlgorithm = new DoubleEncryption<>(new DoubleEncryption<>(new DoubleEncryption<>(XorEncryption.getInstance())));
             logger.debug("encryption operation: " + encryptionAlgorithm);
             FileEncryptor fileEncryptor = new FileEncryptor(encryptionAlgorithm);
             new EncryptionLog4JLogger(fileEncryptor.getStateChangeSupport());

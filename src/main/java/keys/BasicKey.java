@@ -1,14 +1,14 @@
 package keys;
 
-public class IntKey implements IKey {
-    public final int key;
+public class BasicKey<T> implements IKey<T> {
+    public final T key;
 
     //constructor
-    public IntKey(int key) {
+    public BasicKey(T key) {
         this.key = key;
     }
     //getter
-    public int getKey() {
+    public T getKey() {
         return key;
     }
     @Override

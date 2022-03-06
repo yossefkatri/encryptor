@@ -4,18 +4,18 @@ import encriptionAlgorithms.EncryptionAlgorithmImpl;
 import encriptionAlgorithms.IEncryptionAlgorithm;
 import keys.IKey;
 
-public class RepeatEncryption extends EncryptionAlgorithmImpl {
-    final IEncryptionAlgorithm encryptionAlgorithm;
+public class RepeatEncryption<T> extends EncryptionAlgorithmImpl<T> {
+    final IEncryptionAlgorithm<T> encryptionAlgorithm;
     final int times;
 
-    public RepeatEncryption(EncryptionAlgorithmImpl encryptionAlgorithm, int times) {
+    public RepeatEncryption(EncryptionAlgorithmImpl<T> encryptionAlgorithm, int times) {
         this.encryptionAlgorithm = encryptionAlgorithm;
         this.numberOfKeys = encryptionAlgorithm.numberOfKeys;
         this.times = times;
     }
 
     @Override
-    public char encryptChar(char plainChar, IKey key) {
+    public char encryptChar(char plainChar, IKey<T> key) {
         char ciphertext = plainChar;
         for (int i = 0; i < times; ++i) {
             ciphertext = encryptionAlgorithm.encryptChar(ciphertext,key);
@@ -24,7 +24,7 @@ public class RepeatEncryption extends EncryptionAlgorithmImpl {
     }
 
     @Override
-    public char decryptChar(char cipherChar, IKey key) {
+    public char decryptChar(char cipherChar, IKey<T> key) {
         char plainChar = cipherChar;
         for (int i = 0; i < times; ++i) {
             plainChar =encryptionAlgorithm.decryptChar(plainChar,key);

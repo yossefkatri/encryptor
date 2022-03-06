@@ -1,4 +1,5 @@
 package keys;
 
-public interface IKey {
+public interface IKey<T> {
 }
+

@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
@@ -19,8 +18,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+@SuppressWarnings("unchecked")
 class FileEncryptorTest {
-    final EncryptionAlgorithmImpl encryptionAlgorithm = mock(EncryptionAlgorithmImpl.class);
+    final EncryptionAlgorithmImpl<Integer> encryptionAlgorithm = mock(EncryptionAlgorithmImpl.class);
     final FileEncryptor testedEncryptor = new FileEncryptor(encryptionAlgorithm);
 
     @Test

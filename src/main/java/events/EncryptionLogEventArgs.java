@@ -18,6 +18,8 @@ public class EncryptionLogEventArgs {
 
     @Override
     public boolean equals(Object obj) {
+        if(getClass() != obj.getClass())
+            return false;
         EncryptionLogEventArgs encryptionLogEventArgs = (EncryptionLogEventArgs) obj;
         return Time.equals(encryptionLogEventArgs.Time)&&encryptionAlgorithmName.equals(encryptionLogEventArgs.encryptionAlgorithmName)
                 &&decryptedFile.equals(encryptionLogEventArgs.decryptedFile)&&encryptedFile.equals(encryptionLogEventArgs.encryptedFile)

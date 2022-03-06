@@ -1,19 +1,19 @@
 package keys;
 
-public class DoubleKey implements IKey {
-    final IKey key1;
-    final IKey key2;
+public class DoubleKey<T> implements IKey<T> {
+    final IKey<T> key1;
+    final IKey<T> key2;
 
     //constructor
-    public DoubleKey(IKey key1, IKey key2) {
+    public DoubleKey(IKey<T> key1, IKey<T> key2) {
         this.key1 = key1;
         this.key2 = key2;
     }
     //getters
-    public IKey getKey1() {
+    public IKey<T> getKey1() {
         return key1;
     }
-    public IKey getKey2() {
+    public IKey<T> getKey2() {
         return key2;
     }
 

@@ -1,7 +1,7 @@
 package encriptionAlgorithms.basicAlgorithms;
 
 import keys.IKey;
-import keys.IntKey;
+import keys.BasicKey;
 
 //singleton class
 public class ShiftUpEncryption extends BasicEncryption {
@@ -27,14 +27,14 @@ public class ShiftUpEncryption extends BasicEncryption {
 
     // encrypt the plaintext with the key and return the ciphertext
     @Override
-    public char encryptChar(char plainChar, IKey key) {
-        int intKey = ((IntKey)key).getKey();
+    public char encryptChar(char plainChar, IKey<Integer> key) {
+        int intKey = ((BasicKey<Integer>)key).getKey();
         return (char) ((plainChar + intKey) % ConstantsEncryption.MAX_CHAR);
     }
     //decrypt the ciphertext with the key and return the plaintext
     @Override
-    public char decryptChar(char cipherChar, IKey key) {
-        int intKey = ((IntKey)key).getKey();
+    public char decryptChar(char cipherChar, IKey<Integer> key) {
+        int intKey = ((BasicKey<Integer>)key).getKey();
         return (char) ((cipherChar + ConstantsEncryption.MAX_CHAR - intKey) % ConstantsEncryption.MAX_CHAR);
     }
 

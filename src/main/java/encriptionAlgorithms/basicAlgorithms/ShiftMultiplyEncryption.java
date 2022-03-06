@@ -1,7 +1,7 @@
 package encriptionAlgorithms.basicAlgorithms;
 
 import keys.IKey;
-import keys.IntKey;
+import keys.BasicKey;
 
 import java.math.BigInteger;
 
@@ -52,9 +52,9 @@ public class ShiftMultiplyEncryption extends BasicEncryption {
     }
     // encrypt the plaintext with the key and return the ciphertext
     @Override
-    public char encryptChar(char plaintext, IKey key) {
+    public char encryptChar(char plaintext, IKey<Integer> key) {
         //limited my key to 0-10
-        int intKey = ((IntKey)key).getKey()%11;
+        int intKey = ((BasicKey<Integer>)key).getKey() %11;
         //calculate the prime-key
         int primeKey = generatePrimeNum(intKey);
 
@@ -64,8 +64,8 @@ public class ShiftMultiplyEncryption extends BasicEncryption {
 
     //decrypt the ciphertext with the key and return the plaintext
     @Override
-    public char decryptChar(char ciphertext, IKey key) {
-        int intKey = ((IntKey)key).getKey()%11;
+    public char decryptChar(char ciphertext, IKey<Integer> key) {
+        int intKey = ((BasicKey<Integer>)key).getKey() %11;
         int primeKey =generatePrimeNum(intKey);
 
         //calculate the multiplication inverse

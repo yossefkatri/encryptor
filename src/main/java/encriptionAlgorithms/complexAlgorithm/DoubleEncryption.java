@@ -6,27 +6,27 @@ import keys.DoubleKey;
 import keys.IKey;
 
 
-public class DoubleEncryption extends EncryptionAlgorithmImpl {
-    final IEncryptionAlgorithm encryptionAlgorithm;
+public class DoubleEncryption<T> extends EncryptionAlgorithmImpl<T> {
+    final IEncryptionAlgorithm<T> encryptionAlgorithm;
 
 
-    public DoubleEncryption(EncryptionAlgorithmImpl aEncryptionAlgorithm) {
+    public DoubleEncryption(EncryptionAlgorithmImpl<T> aEncryptionAlgorithm) {
         encryptionAlgorithm = aEncryptionAlgorithm;
         numberOfKeys = 2 * aEncryptionAlgorithm.numberOfKeys;
     }
 
     @Override
-    public char encryptChar(char plainChar, IKey key) {
-        char cipherChar = encryptionAlgorithm.encryptChar(plainChar, ((DoubleKey) key).getKey1());
-        cipherChar = encryptionAlgorithm.encryptChar(cipherChar, ((DoubleKey) key).getKey2());
+    public char encryptChar(char plainChar, IKey<T> key) {
+        char cipherChar = encryptionAlgorithm.encryptChar(plainChar, ((DoubleKey<T>) key).getKey1());
+        cipherChar = encryptionAlgorithm.encryptChar(cipherChar, ((DoubleKey<T>) key).getKey2());
         return cipherChar;
     }
 
     @Override
-    public char decryptChar(char cipherChar, IKey key) {
+    public char decryptChar(char cipherChar, IKey<T> key) {
 
-        char plainChar = encryptionAlgorithm.decryptChar(cipherChar, ((DoubleKey) key).getKey2());
-        plainChar = encryptionAlgorithm.decryptChar(plainChar, ((DoubleKey) key).getKey1());
+        char plainChar = encryptionAlgorithm.decryptChar(cipherChar, ((DoubleKey<T>) key).getKey2());
+        plainChar = encryptionAlgorithm.decryptChar(plainChar, ((DoubleKey<T>) key).getKey1());
         return plainChar;
     }
 
@@ -37,6 +37,6 @@ public class DoubleEncryption extends EncryptionAlgorithmImpl {
 
     @Override
     public String toString() {
-        return "DoubleEncryption{"+encryptionAlgorithm.toString()+"}";
+        return "DoubleEncryption{"+ encryptionAlgorithm +"}";
     }
 }
