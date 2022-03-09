@@ -21,7 +21,7 @@ public class EncryptionLogger implements IDecryptionEndedListener, IEncryptionEn
     public void decryptionStarted(DecryptionStartedEvent event) {
 
         EncryptionLogEventArgs eventArgs = event.getEncryptionLogEventArgs();
-        System.out.println(eventArgs.Time + ": The decryption operation " + eventArgs.encryptionAlgorithmName + " has been started with file: " + eventArgs.encryptedFile + " and key: " + eventArgs.keyPath);
+        System.out.println(eventArgs.Time + ": The decryption operation " + eventArgs.encryptionAlgorithmName + " has been started with file: " + eventArgs.encryptedFile + " and key: " + eventArgs.key);
     }
 
     @Override
@@ -40,6 +40,6 @@ public class EncryptionLogger implements IDecryptionEndedListener, IEncryptionEn
     public void encryptEnded(EncryptionEndedEvent event) {
         EncryptionLogEventArgs eventArgs = event.getEncryptionLogEventArgs();
         System.out.println(eventArgs.Time + ": The encryption is successfully done. " +
-                " the encrypted file stored: " + eventArgs.decryptedFile + " and the key stored: " + eventArgs.keyPath);
+                " the encrypted file stored: " + eventArgs.decryptedFile + " and the key stored: " + eventArgs.key);
     }
 }

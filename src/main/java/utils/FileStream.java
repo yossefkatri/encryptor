@@ -25,6 +25,11 @@ public final class FileStream {
         return Paths.get(filePath.getParent().toString(),name+ending+extension);
     }
 
+    public static Path getDirectoryOutput(Path path, String subDir)
+    {
+        return Paths.get(path.toString(),subDir);
+    }
+
     //create file by his name
     public static File createFile(Path fileName) throws IOException {
        try {
@@ -81,4 +86,30 @@ public final class FileStream {
         }
 
     }
+
+    public static Boolean createDirectory(Path path) {
+        File theDir = new File(path.toString());
+        return theDir.mkdirs();
+    }
+
+    public static void generateBigFiles(Path dir, int numOfFile) throws IOException {
+        Path directory = Paths.get(dir.toString(),"Big");
+        createDirectory(directory);
+        for (int i=0; i<numOfFile;++i)
+        {
+            File file = createFile(Paths.get(directory.toString(), "bigFile"+ i +".txt"));
+            FileWriter fileWriter = new FileWriter(file);
+            String template = "example,test";
+            repeatWrite(fileWriter,template);
+            fileWriter.close();
+        }
+    }
+
+    private static void repeatWrite(FileWriter fileWriter, String template) throws IOException {
+        for (int i = 0; i< (long) 262144; ++i)
+        {
+            fileWriter.write(template);
+        }
+    }
+
 }

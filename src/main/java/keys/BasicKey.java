@@ -15,4 +15,9 @@ public class BasicKey<T> implements IKey<T> {
     public String toString() {
         return String.valueOf(key);
     }
+
+    @Override
+    public String type() {
+        return "BasicKey{"+key+"}";
+    }
 }

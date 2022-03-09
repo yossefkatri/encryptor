@@ -21,4 +21,9 @@ public class DoubleKey<T> implements IKey<T> {
     public String toString() {
         return key1 +"\n"+ key2;
     }
+
+    @Override
+    public String type() {
+        return "DoubleKey{"+key1.type()+", "+key2.type()+"}";
+    }
 }

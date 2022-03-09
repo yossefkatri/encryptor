@@ -14,14 +14,14 @@ public class EncryptionEndedEvent extends EventObject {
      * @param source The object on which the Event initially occurred.
      * @throws IllegalArgumentException if source is null.
      */
-    public EncryptionEndedEvent(Object source, LocalDateTime endTime, String encryptionAlgorithmName ,Path decryptedFile, Path encryptedFile, Path keyPath) {
+    public EncryptionEndedEvent(Object source, LocalDateTime endTime, String encryptionAlgorithmName ,Path decryptedFile, Path encryptedFile, String key) {
         super(source);
         encryptionLogEventArgs = new EncryptionLogEventArgs();
         encryptionLogEventArgs.Time = endTime;
         encryptionLogEventArgs.encryptionAlgorithmName = encryptionAlgorithmName;
         encryptionLogEventArgs.decryptedFile = decryptedFile;
         encryptionLogEventArgs.encryptedFile = encryptedFile;
-        encryptionLogEventArgs.keyPath = keyPath;
+        encryptionLogEventArgs.key = key;
     }
 
     public EncryptionLogEventArgs getEncryptionLogEventArgs() {

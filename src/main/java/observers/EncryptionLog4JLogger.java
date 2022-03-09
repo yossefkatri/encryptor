@@ -25,7 +25,7 @@ public class EncryptionLog4JLogger implements IDecryptionEndedListener, IEncrypt
     public void decryptionStarted(DecryptionStartedEvent event) {
 
         EncryptionLogEventArgs eventArgs = event.getEncryptionLogEventArgs();
-        logger.info(eventArgs.Time + ": The decryption operation " + eventArgs.encryptionAlgorithmName + " has been started with file: " + eventArgs.encryptedFile + " and key: " + eventArgs.keyPath);
+        logger.info(eventArgs.Time + ": The decryption operation " + eventArgs.encryptionAlgorithmName + " has been started with file: " + eventArgs.encryptedFile + " and key: " + eventArgs.key.replaceAll("\n"," "));
     }
 
     @Override
@@ -44,6 +44,6 @@ public class EncryptionLog4JLogger implements IDecryptionEndedListener, IEncrypt
     public void encryptEnded(EncryptionEndedEvent event) {
         EncryptionLogEventArgs eventArgs = event.getEncryptionLogEventArgs();
         logger.info(eventArgs.Time + ": The encryption is successfully done. " +
-                " the encrypted file stored: " + eventArgs.decryptedFile + " and the key stored: " + eventArgs.keyPath);
+                " the encrypted file stored: " + eventArgs.decryptedFile + " and the key: " + eventArgs.key.replaceAll("\n"," "));
     }
 }

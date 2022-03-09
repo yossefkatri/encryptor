@@ -1,61 +1,74 @@
 import encriptionAlgorithms.IEncryptionAlgorithm;
 import encriptionAlgorithms.basicAlgorithms.XorEncryption;
 import encriptionAlgorithms.complexAlgorithm.DoubleEncryption;
+import keys.IKey;
 import observers.EncryptionLog4JLogger;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import utils.FileEncryptor;
 import utils.FileStream;
+import utils.KeyManager;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Scanner;
 
 public class encryptor {
-
-
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         Logger logger = LogManager.getLogger(encryptor.class);
         isDebug();
         while (true) {
-            System.out.println("menu: \n 1: encryption \n 2: decryption");
+            System.out.println("menu: \n 1: encryption file \n 2: decryption file \n 3: encryption directory \n 4: decryption directory");
             int input = scanner.nextInt();
             logger.debug("choice: " + input);
             scanner.nextLine();
             IEncryptionAlgorithm<Integer> encryptionAlgorithm = new DoubleEncryption<>(new DoubleEncryption<>(new DoubleEncryption<>(XorEncryption.getInstance())));
             logger.debug("encryption operation: " + encryptionAlgorithm);
-            FileEncryptor fileEncryptor = new FileEncryptor(encryptionAlgorithm);
+            FileEncryptor<Integer> fileEncryptor = new FileEncryptor<>(encryptionAlgorithm);
+            KeyManager keyManager = new KeyManager(encryptionAlgorithm);
             new EncryptionLog4JLogger(fileEncryptor.getStateChangeSupport());
             if (input == 1) {
                 try {
-                //get the file-path from the user
-                System.out.println("Enter the path of your source file:");
-                String stringPath = scanner.nextLine();
-                stringPath = stringPath.replaceAll("\"", "");
+                    //get the file-path from the user
+                    System.out.println("Enter the path of your source file:");
+                    String stringPath = scanner.nextLine();
+                    stringPath = stringPath.replaceAll("\"", "");
 
                     Path path = Paths.get(stringPath);
+
                     //calculate the path
                     Path filesPath = path.getParent();
                     Path outputFilepath = FileStream.getFileName(path, "_encrypted");
-                    logger.debug("input file path:" + path + " output file path: " + outputFilepath + " key directory:" + filesPath);
-                    fileEncryptor.encryptFile(path, outputFilepath, filesPath);
+
+                    logger.debug("generate keys for encryption");
+                    IKey<Integer> key = keyManager.getKeys();
+                    logger.debug("input file path:" + path + " output file path: " + outputFilepath + " key content: " + key);
+                    fileEncryptor.encryptFile(path, outputFilepath, key);
+
+                    logger.debug("start saving key operation with path:"+filesPath+"and key: "+key);
+                    Path keyPath = keyManager.saveKey(filesPath, key);
+                    logger.info("save key file successfully in " + keyPath);
                 } catch (Exception e) {
                     logger.error(e);
                 }
-            } else if (input == 2) {
+            }
+            else if (input == 2) {
                 try {
-                //get the encrypted-file-path from the user
-                System.out.println("Enter the location of the encrypted source file: ");
-                String encryptedFilePathInput = scanner.nextLine();
-                encryptedFilePathInput = encryptedFilePathInput.replaceAll("\"", "");
+                    //get the encrypted-file-path from the user
+                    System.out.println("Enter the location of the encrypted source file: ");
+                    String encryptedFilePathInput = scanner.nextLine();
+                    encryptedFilePathInput = encryptedFilePathInput.replaceAll("\"", "");
 
-                //get the key-file-path from the user
-                System.out.println("Enter the location of the key file: ");
-                String keyPathInput = scanner.nextLine();
-                keyPathInput = keyPathInput.replaceAll("\"", "");
+                    //get the key-file-path from the user
+                    System.out.println("Enter the location of the key file: ");
+                    String keyPathInput = scanner.nextLine();
+                    keyPathInput = keyPathInput.replaceAll("\"", "");
 
 
                     Path encryptedFilePath = Paths.get(encryptedFilePathInput);
@@ -63,12 +76,54 @@ public class encryptor {
                     Path keyPath = Paths.get(keyPathInput);
 
                     logger.debug("input file path:" + encryptedFilePath + " output file path: " + decryptedFilePath + " key path:" + keyPath);
-                    fileEncryptor.decryptFile(encryptedFilePath, decryptedFilePath, keyPath);
+
+                    logger.debug("start extract key from file: "+keyPath);
+                    List<Integer> keys = FileStream.readKeys(keyPath);
+                    logger.debug("finish to read all of the data from the key file");
+                    logger.debug("start checking the validation of the keys");
+                    keyManager.checkKeys(keys);
+                    logger.debug("all keys are validations");
+                    logger.debug("create structure of keys");
+                    IKey<Integer> key = keyManager.buildKey(keys);
+                    logger.debug("finish to create the structure keys");
+                    fileEncryptor.decryptFile(encryptedFilePath, decryptedFilePath, key);
                 } catch (Exception e) {
                     logger.error(e);
                 }
-            } else {
-                logger.error("you should choice 1 or 2");
+            }
+            else if (input == 3) {
+                try {
+                    //get the file-path from the user
+                    System.out.println("Enter the path of your directory:");
+                    String stringPath = scanner.nextLine();
+                    stringPath = stringPath.replaceAll("\"", "");
+
+                    Path dirPath = Paths.get(stringPath);
+                    if (!new File(stringPath).isDirectory()) {
+                        throw new Exception("the input should be a directory");
+                    }
+                    Path outputPath = FileStream.getDirectoryOutput(dirPath.getParent(), "encrypted");
+                    logger.debug("input file path:" + dirPath + " output file path: " + outputPath + " key directory:" + outputPath);
+
+                    logger.debug("generate keys for encryption");
+                    IKey<Integer> key = keyManager.getKeys();
+                    fileEncryptor.encryptDirectory(dirPath, outputPath, key);
+
+                    Path keyPath = keyManager.saveKey(outputPath, key);
+                    logger.info("save key file successfully in " + keyPath);
+                } catch (Exception e) {
+                    logger.error(e);
+                }
+            }
+            else if (input == 4) {
+                try {
+                    throw new NotImplementedException();
+                } catch (Exception e) {
+                    logger.error(e);
+                }
+            }
+            else {
+                logger.error("you should choice between 1-4");
             }
         }
     }
@@ -77,8 +132,9 @@ public class encryptor {
         boolean isDebug = java.lang.management.ManagementFactory.
                 getRuntimeMXBean().
                 getInputArguments().toString().contains("jdwp");
-        if(!isDebug) {
+        if (!isDebug) {
             Configurator.setRootLevel(Level.INFO);
         }
     }
+
 }

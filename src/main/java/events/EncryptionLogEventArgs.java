@@ -8,12 +8,12 @@ public class EncryptionLogEventArgs {
     public String encryptionAlgorithmName;
     public Path decryptedFile;
     public Path encryptedFile;
-    public Path keyPath;
+    public String key;
 
     @Override
     public int hashCode() {
         return Time.hashCode() + encryptedFile.hashCode() + decryptedFile.hashCode()
-                +encryptedFile.hashCode() +keyPath.hashCode();
+                +encryptedFile.hashCode() + key.hashCode();
     }
 
     @Override
@@ -23,6 +23,6 @@ public class EncryptionLogEventArgs {
         EncryptionLogEventArgs encryptionLogEventArgs = (EncryptionLogEventArgs) obj;
         return Time.equals(encryptionLogEventArgs.Time)&&encryptionAlgorithmName.equals(encryptionLogEventArgs.encryptionAlgorithmName)
                 &&decryptedFile.equals(encryptionLogEventArgs.decryptedFile)&&encryptedFile.equals(encryptionLogEventArgs.encryptedFile)
-                &&keyPath.equals(encryptionLogEventArgs.keyPath);
+                && key.equals(encryptionLogEventArgs.key);
     }
 }
