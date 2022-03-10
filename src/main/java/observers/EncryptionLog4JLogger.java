@@ -24,7 +24,7 @@ public class EncryptionLog4JLogger implements IDecryptionEndedListener, IEncrypt
     }
 
     @Override
-    public void decryptionStarted(DecryptionStartedEvent event) {
+    public  void decryptionStarted(DecryptionStartedEvent event) {
         EncryptionLogEventArgs eventArgs = event.getEncryptionLogEventArgs();
         String name = "file";
         if (!eventArgs.isFile)
@@ -36,7 +36,7 @@ public class EncryptionLog4JLogger implements IDecryptionEndedListener, IEncrypt
     }
 
     @Override
-    public void decryptionEnded(DecryptionEndedEvent event) {
+    public  void decryptionEnded(DecryptionEndedEvent event) {
         EncryptionLogEventArgs eventArgs = event.getEncryptionLogEventArgs();
         String name = "file";
         if (!eventArgs.isFile)
@@ -47,7 +47,7 @@ public class EncryptionLog4JLogger implements IDecryptionEndedListener, IEncrypt
     }
 
     @Override
-    public void encryptedStarted(EncryptionStartedEvent event) {
+    public  void encryptedStarted(EncryptionStartedEvent event) {
         EncryptionLogEventArgs eventArgs = event.getEncryptionLogEventArgs();
         String name = "file";
         if (!eventArgs.isFile)
@@ -58,7 +58,7 @@ public class EncryptionLog4JLogger implements IDecryptionEndedListener, IEncrypt
     }
 
     @Override
-    public void encryptEnded(EncryptionEndedEvent event) {
+    public  void encryptEnded(EncryptionEndedEvent event) {
         EncryptionLogEventArgs eventArgs = event.getEncryptionLogEventArgs();
         String name = "file";
         if (!eventArgs.isFile)

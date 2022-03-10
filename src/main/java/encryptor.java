@@ -2,6 +2,8 @@ import encriptionAlgorithms.IEncryptionAlgorithm;
 import encriptionAlgorithms.basicAlgorithms.XorEncryption;
 import encriptionAlgorithms.complexAlgorithm.DoubleEncryption;
 import keys.IKey;
+import multiThreading.IDirectoryProcessor;
+import multiThreading.SyncDirectoryProcessor;
 import observers.EncryptionLog4JLogger;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -103,7 +105,9 @@ public class encryptor {
 
                     logger.debug("generate keys for encryption");
                     IKey<Integer> key = keyManager.getKeys();
-                    fileEncryptor.encryptDirectory(dirPath, outputPath, key);
+
+                    IDirectoryProcessor<Integer> iDirectoryProcessor = new SyncDirectoryProcessor<>(fileEncryptor);
+                    iDirectoryProcessor.encryptDirectory(dirPath, outputPath, key);
 
                     Path keyPath = keyManager.saveKey(outputPath, key);
                     logger.info("save key file successfully in " + keyPath);
@@ -139,7 +143,10 @@ public class encryptor {
                     logger.debug("create structure of keys");
                     IKey<Integer> key = keyManager.buildKey(keys);
                     logger.debug("finish to create the structure keys");
-                    fileEncryptor.decryptedDirectory(encryptedDirPath, decryptedDirPath, key);
+
+                    IDirectoryProcessor<Integer> iDirectoryProcessor = new SyncDirectoryProcessor<>(fileEncryptor);
+                    iDirectoryProcessor.decryptedDirectory(encryptedDirPath, decryptedDirPath, key);
+
                 } catch (Exception e) {
                     logger.error(e);
                 }

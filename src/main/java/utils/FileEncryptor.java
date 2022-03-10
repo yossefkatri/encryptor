@@ -5,15 +5,14 @@ import keys.IKey;
 
 import java.io.File;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
-import java.util.Objects;
 
 public class FileEncryptor<T> {
     final IEncryptionAlgorithm<T> encryptionAlgorithm;
+
     final StateChangeSupport stateChangeSupport = new StateChangeSupport();
 
     private LocalDateTime getPeriod(LocalDateTime startTime) {
@@ -40,38 +39,6 @@ public class FileEncryptor<T> {
 
     public FileEncryptor(IEncryptionAlgorithm<T> encryptionAlgorithm) {
         this.encryptionAlgorithm = encryptionAlgorithm;
-    }
-
-    public void encryptDirectory(Path originalDirPath, Path outputDirPath, IKey<T> key) throws Exception {
-        LocalDateTime startTime = LocalDateTime.now();
-        stateChangeSupport.notifyEncryptionStartedListeners(this, startTime, encryptionAlgorithm.toString(), outputDirPath, originalDirPath, key.toString(), false);
-
-        File dir = new File(originalDirPath.toString());
-        FileStream.createDirectory(outputDirPath);
-        for (File file : Objects.requireNonNull(dir.listFiles())) {
-            if (file.isFile() && file.getName().contains(".txt")) {
-                encryptFile(Paths.get(originalDirPath.toString(), file.getName()), Paths.get(outputDirPath.toString(), file.getName()), key);
-            }
-        }
-
-        LocalDateTime period = getPeriod(startTime);
-        stateChangeSupport.notifyEncryptionEndedListeners(this, period, encryptionAlgorithm.toString(), outputDirPath, originalDirPath, key.toString(), false);
-    }
-
-    public void decryptedDirectory(Path originalDirPath, Path outputDirPath, IKey<T> key) throws Exception {
-        LocalDateTime startTime = LocalDateTime.now();
-        stateChangeSupport.notifyDecryptionStartedListeners(this, startTime, encryptionAlgorithm.toString(), outputDirPath, originalDirPath, key.toString(), false);
-
-        File dir = new File(originalDirPath.toString());
-        FileStream.createDirectory(outputDirPath);
-        for (File file : Objects.requireNonNull(dir.listFiles())) {
-            if (file.isFile() && file.getName().contains(".txt") && !file.getName().contains("key.txt")) {
-                decryptFile(Paths.get(originalDirPath.toString(), file.getName()), Paths.get(outputDirPath.toString(), file.getName()), key);
-            }
-        }
-
-        LocalDateTime period = getPeriod(startTime);
-        stateChangeSupport.notifyDecryptionEndedListeners(this, period, encryptionAlgorithm.toString(), outputDirPath, originalDirPath, key.toString(), false);
     }
 
     public void encryptFile(Path originalFilePath, Path outputFilePath, IKey<T> key) throws Exception {
@@ -107,4 +74,7 @@ public class FileEncryptor<T> {
         return stateChangeSupport;
     }
 
+    public IEncryptionAlgorithm<T> getEncryptionAlgorithm() {
+        return encryptionAlgorithm;
+    }
 }
