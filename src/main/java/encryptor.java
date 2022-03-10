@@ -7,12 +7,10 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import utils.FileEncryptor;
 import utils.FileStream;
 import utils.KeyManager;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -51,7 +49,7 @@ public class encryptor {
                     logger.debug("input file path:" + path + " output file path: " + outputFilepath + " key content: " + key);
                     fileEncryptor.encryptFile(path, outputFilepath, key);
 
-                    logger.debug("start saving key operation with path:"+filesPath+"and key: "+key);
+                    logger.debug("start saving key operation with path:" + filesPath + "and key: " + key);
                     Path keyPath = keyManager.saveKey(filesPath, key);
                     logger.info("save key file successfully in " + keyPath);
                 } catch (Exception e) {
@@ -77,7 +75,7 @@ public class encryptor {
 
                     logger.debug("input file path:" + encryptedFilePath + " output file path: " + decryptedFilePath + " key path:" + keyPath);
 
-                    logger.debug("start extract key from file: "+keyPath);
+                    logger.debug("start extract key from file: " + keyPath);
                     List<Integer> keys = FileStream.readKeys(keyPath);
                     logger.debug("finish to read all of the data from the key file");
                     logger.debug("start checking the validation of the keys");
@@ -98,10 +96,8 @@ public class encryptor {
                     String stringPath = scanner.nextLine();
                     stringPath = stringPath.replaceAll("\"", "");
 
-                    Path dirPath = Paths.get(stringPath);
-                    if (!new File(stringPath).isDirectory()) {
-                        throw new Exception("the input should be a directory");
-                    }
+                    Path dirPath = FileStream.getDirPath(stringPath);
+
                     Path outputPath = FileStream.getDirectoryOutput(dirPath.getParent(), "encrypted");
                     logger.debug("input file path:" + dirPath + " output file path: " + outputPath + " key directory:" + outputPath);
 
@@ -117,7 +113,33 @@ public class encryptor {
             }
             else if (input == 4) {
                 try {
-                    throw new NotImplementedException();
+                    //get the encrypted-file-path from the user
+                    System.out.println("Enter the location of the encrypted source Directory: ");
+                    String encryptedDirPathInput = scanner.nextLine();
+                    encryptedDirPathInput = encryptedDirPathInput.replaceAll("\"", "");
+
+                    //get the key-file-path from the user
+                    System.out.println("Enter the location of the key file: ");
+                    String keyPathInput = scanner.nextLine();
+                    keyPathInput = keyPathInput.replaceAll("\"", "");
+
+
+                    Path encryptedDirPath = Paths.get(encryptedDirPathInput);
+                    Path decryptedDirPath = FileStream.getDirectoryOutput(encryptedDirPath.getParent(), "decrypted");
+                    Path keyPath = Paths.get(keyPathInput);
+
+                    logger.debug("input Directory path:" + encryptedDirPath + " output Directory path: " + decryptedDirPath + " key path:" + keyPath);
+
+                    logger.debug("start extract key from file: " + keyPath);
+                    List<Integer> keys = FileStream.readKeys(keyPath);
+                    logger.debug("finish to read all of the data from the key file");
+                    logger.debug("start checking the validation of the keys");
+                    keyManager.checkKeys(keys);
+                    logger.debug("all keys are validations");
+                    logger.debug("create structure of keys");
+                    IKey<Integer> key = keyManager.buildKey(keys);
+                    logger.debug("finish to create the structure keys");
+                    fileEncryptor.decryptedDirectory(encryptedDirPath, decryptedDirPath, key);
                 } catch (Exception e) {
                     logger.error(e);
                 }

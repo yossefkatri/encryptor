@@ -6,12 +6,21 @@ import keys.IKey;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
 public class FileEncryptor<T> {
     final IEncryptionAlgorithm<T> encryptionAlgorithm;
     final StateChangeSupport stateChangeSupport = new StateChangeSupport();
+
+    private LocalDateTime getPeriod(LocalDateTime startTime) {
+        LocalDateTime endTime = LocalDateTime.now();
+        long mills = ChronoUnit.MILLIS.between(startTime, endTime);
+        return Instant.ofEpochMilli(mills).atZone(ZoneId.of("UTC")).toLocalDateTime();
+    }
 
     private String encrypt(String plaintext, IKey<T> key) {
         StringBuilder encryptedData = new StringBuilder();
@@ -34,17 +43,40 @@ public class FileEncryptor<T> {
     }
 
     public void encryptDirectory(Path originalDirPath, Path outputDirPath, IKey<T> key) throws Exception {
+        LocalDateTime startTime = LocalDateTime.now();
+        stateChangeSupport.notifyEncryptionStartedListeners(this, startTime, encryptionAlgorithm.toString(), outputDirPath, originalDirPath, key.toString(), false);
+
         File dir = new File(originalDirPath.toString());
+        FileStream.createDirectory(outputDirPath);
         for (File file : Objects.requireNonNull(dir.listFiles())) {
             if (file.isFile() && file.getName().contains(".txt")) {
-                // TODO: 3/9/2022 encrypt the file
                 encryptFile(Paths.get(originalDirPath.toString(), file.getName()), Paths.get(outputDirPath.toString(), file.getName()), key);
             }
         }
+
+        LocalDateTime period = getPeriod(startTime);
+        stateChangeSupport.notifyEncryptionEndedListeners(this, period, encryptionAlgorithm.toString(), outputDirPath, originalDirPath, key.toString(), false);
+    }
+
+    public void decryptedDirectory(Path originalDirPath, Path outputDirPath, IKey<T> key) throws Exception {
+        LocalDateTime startTime = LocalDateTime.now();
+        stateChangeSupport.notifyDecryptionStartedListeners(this, startTime, encryptionAlgorithm.toString(), outputDirPath, originalDirPath, key.toString(), false);
+
+        File dir = new File(originalDirPath.toString());
+        FileStream.createDirectory(outputDirPath);
+        for (File file : Objects.requireNonNull(dir.listFiles())) {
+            if (file.isFile() && file.getName().contains(".txt") && !file.getName().contains("key.txt")) {
+                decryptFile(Paths.get(originalDirPath.toString(), file.getName()), Paths.get(outputDirPath.toString(), file.getName()), key);
+            }
+        }
+
+        LocalDateTime period = getPeriod(startTime);
+        stateChangeSupport.notifyDecryptionEndedListeners(this, period, encryptionAlgorithm.toString(), outputDirPath, originalDirPath, key.toString(), false);
     }
 
     public void encryptFile(Path originalFilePath, Path outputFilePath, IKey<T> key) throws Exception {
-        stateChangeSupport.notifyEncryptionStartedListeners(this, LocalDateTime.now(), encryptionAlgorithm.toString(), outputFilePath, originalFilePath, key.toString());
+        LocalDateTime startTime = LocalDateTime.now();
+        stateChangeSupport.notifyEncryptionStartedListeners(this, startTime, encryptionAlgorithm.toString(), outputFilePath, originalFilePath, key.toString(), true);
 
         String plainText = FileStream.readFileContent(originalFilePath);
         String cipherText = encrypt(plainText, key);
@@ -53,11 +85,13 @@ public class FileEncryptor<T> {
         File cipherFile = FileStream.createFile(outputFilePath);
         FileStream.saveData(cipherFile, cipherText);
 
-        stateChangeSupport.notifyEncryptionEndedListeners(this, LocalDateTime.now(), encryptionAlgorithm.toString(), outputFilePath, originalFilePath, key.toString());
+        LocalDateTime period = getPeriod(startTime);
+        stateChangeSupport.notifyEncryptionEndedListeners(this, period, encryptionAlgorithm.toString(), outputFilePath, originalFilePath, key.toString(), true);
     }
 
     public void decryptFile(Path encryptedFilePath, Path outputFilePath, IKey<T> key) throws Exception {
-        stateChangeSupport.notifyDecryptionStartedListeners(this, LocalDateTime.now(), encryptionAlgorithm.toString(), outputFilePath, encryptedFilePath, key.toString());
+        LocalDateTime startTime = LocalDateTime.now();
+        stateChangeSupport.notifyDecryptionStartedListeners(this, startTime, encryptionAlgorithm.toString(), outputFilePath, encryptedFilePath, key.toString(), true);
 
         String cipherText = FileStream.readFileContent(encryptedFilePath);
         String decryptMessage = decrypt(cipherText, key);
@@ -65,7 +99,8 @@ public class FileEncryptor<T> {
         File decryptedFile = FileStream.createFile(outputFilePath);
         FileStream.saveData(decryptedFile, decryptMessage);
 
-        stateChangeSupport.notifyDecryptionEndedListeners(this, LocalDateTime.now(), encryptionAlgorithm.toString(), outputFilePath, encryptedFilePath, key.toString());
+        LocalDateTime period = getPeriod(startTime);
+        stateChangeSupport.notifyDecryptionEndedListeners(this, period, encryptionAlgorithm.toString(), outputFilePath, encryptedFilePath, key.toString(), true);
     }
 
     public StateChangeSupport getStateChangeSupport() {

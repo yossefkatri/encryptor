@@ -6,14 +6,15 @@ import java.time.LocalDateTime;
 public class EncryptionLogEventArgs {
     public LocalDateTime Time;
     public String encryptionAlgorithmName;
-    public Path decryptedFile;
-    public Path encryptedFile;
+    public Path decrypted;
+    public Path encrypted;
     public String key;
+    public Boolean isFile;
 
     @Override
     public int hashCode() {
-        return Time.hashCode() + encryptedFile.hashCode() + decryptedFile.hashCode()
-                +encryptedFile.hashCode() + key.hashCode();
+        return Time.hashCode() + encrypted.hashCode() + decrypted.hashCode()
+                + encrypted.hashCode() + key.hashCode();
     }
 
     @Override
@@ -22,7 +23,7 @@ public class EncryptionLogEventArgs {
             return false;
         EncryptionLogEventArgs encryptionLogEventArgs = (EncryptionLogEventArgs) obj;
         return Time.equals(encryptionLogEventArgs.Time)&&encryptionAlgorithmName.equals(encryptionLogEventArgs.encryptionAlgorithmName)
-                &&decryptedFile.equals(encryptionLogEventArgs.decryptedFile)&&encryptedFile.equals(encryptionLogEventArgs.encryptedFile)
-                && key.equals(encryptionLogEventArgs.key);
+                && decrypted.equals(encryptionLogEventArgs.decrypted)&& encrypted.equals(encryptionLogEventArgs.encrypted)
+                && key.equals(encryptionLogEventArgs.key) && isFile.equals(encryptionLogEventArgs.isFile);
     }
 }

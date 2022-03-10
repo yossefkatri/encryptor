@@ -13,6 +13,12 @@ import exceptions.*;
 
 public final class FileStream {
 
+    private static void repeatWrite(FileWriter fileWriter, String template) throws IOException {
+        for (int i = 0; i< (long) 262144; ++i)
+        {
+            fileWriter.write(template);
+        }
+    }
     //create the proper-file-name from the path and the ending.
     public static Path getFileName(Path filePath, String ending) {
         String fullName = filePath.getFileName().toString();
@@ -41,13 +47,18 @@ public final class FileStream {
                writer.print("");
                writer.close();
            }
-
-           //create the file-writer for the file
            return file;
        }
        catch (IOException ex) {
            throw new IOException("The function can't succeed to create file. \n File: "+fileName.getFileName() +"\n Error: "+ex.getMessage());
        }
+    }
+    //create directory by his name
+    public static void createDirectory(Path dirPath) throws IOException {
+        File theDir = new File(dirPath.toString());
+        if(!(theDir.mkdirs() | theDir.exists())) {
+            throw new IOException("The system cannot create the directory");
+        }
     }
 
     //get the key file
@@ -67,7 +78,6 @@ public final class FileStream {
             throw new InvalidEncryptionKeyException("The item isn't a pure number.\n"+ex.getMessage());
         }
     }
-
     //get the  message from the file
     public static String readFileContent(Path filePath) throws IOException {
         Charset charset = StandardCharsets.UTF_8;
@@ -75,8 +85,16 @@ public final class FileStream {
         return String.join("\n",lines);
 
     }
-
+    //get directory path
+    public static Path getDirPath(String stringPath) throws Exception {
+        Path dirPath = Paths.get(stringPath);
+        if (!new File(stringPath).isDirectory()) {
+            throw new Exception("the path should be a directory");
+        }
+        return dirPath;
+    }
     // save the data on the file
+
     public static void saveData(File file, String message) throws IOException {
         try (FileWriter fileWriter = new FileWriter(file)){
             fileWriter.write(message+'\n');
@@ -85,11 +103,6 @@ public final class FileStream {
             throw new IOException("The function doesn't succeed to write to the file. \n File: "+file.getName()+"\n Error: "+e.getMessage());
         }
 
-    }
-
-    public static Boolean createDirectory(Path path) {
-        File theDir = new File(path.toString());
-        return theDir.mkdirs();
     }
 
     public static void generateBigFiles(Path dir, int numOfFile) throws IOException {
@@ -102,13 +115,6 @@ public final class FileStream {
             String template = "example,test";
             repeatWrite(fileWriter,template);
             fileWriter.close();
-        }
-    }
-
-    private static void repeatWrite(FileWriter fileWriter, String template) throws IOException {
-        for (int i = 0; i< (long) 262144; ++i)
-        {
-            fileWriter.write(template);
         }
     }
 

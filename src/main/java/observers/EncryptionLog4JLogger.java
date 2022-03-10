@@ -10,6 +10,8 @@ import org.apache.logging.log4j.Logger;
 import utils.FileEncryptor;
 import utils.StateChangeSupport;
 
+import java.time.ZoneId;
+
 public class EncryptionLog4JLogger implements IDecryptionEndedListener, IEncryptionEndedListener, IDecryptionStartedListener, IEncryptionStartedListener {
     private final Logger logger;
 
@@ -23,27 +25,47 @@ public class EncryptionLog4JLogger implements IDecryptionEndedListener, IEncrypt
 
     @Override
     public void decryptionStarted(DecryptionStartedEvent event) {
-
         EncryptionLogEventArgs eventArgs = event.getEncryptionLogEventArgs();
-        logger.info(eventArgs.Time + ": The decryption operation " + eventArgs.encryptionAlgorithmName + " has been started with file: " + eventArgs.encryptedFile + " and key: " + eventArgs.key.replaceAll("\n"," "));
+        String name = "file";
+        if (!eventArgs.isFile)
+        {
+            name = "directory";
+        }
+
+        logger.info(eventArgs.Time + ": The decryption operation " + eventArgs.encryptionAlgorithmName + " has been started with "+name+": " + eventArgs.encrypted + " and key: " + eventArgs.key.replaceAll("\n"," "));
     }
 
     @Override
     public void decryptionEnded(DecryptionEndedEvent event) {
         EncryptionLogEventArgs eventArgs = event.getEncryptionLogEventArgs();
-        logger.info(eventArgs.Time + ": The decryption is successfully done. The decrypted file stored: " + eventArgs.decryptedFile);
+        String name = "file";
+        if (!eventArgs.isFile)
+        {
+            name = "directory";
+        }
+        logger.info("The decryption is successfully done and takes "+ eventArgs.Time.atZone(ZoneId.of("UTC")).toInstant().toEpochMilli()+" milliseconds.The decrypted "+name+" stored: " + eventArgs.decrypted);
     }
 
     @Override
     public void encryptedStarted(EncryptionStartedEvent event) {
         EncryptionLogEventArgs eventArgs = event.getEncryptionLogEventArgs();
-        logger.info(eventArgs.Time + ": The encryption operation " + eventArgs.encryptionAlgorithmName + "has been started with file: " + eventArgs.decryptedFile);
+        String name = "file";
+        if (!eventArgs.isFile)
+        {
+            name = "directory";
+        }
+        logger.info(eventArgs.Time + ": The encryption operation " + eventArgs.encryptionAlgorithmName + "has been started with "+name+": " + eventArgs.encrypted);
     }
 
     @Override
     public void encryptEnded(EncryptionEndedEvent event) {
         EncryptionLogEventArgs eventArgs = event.getEncryptionLogEventArgs();
-        logger.info(eventArgs.Time + ": The encryption is successfully done. " +
-                " the encrypted file stored: " + eventArgs.decryptedFile + " and the key: " + eventArgs.key.replaceAll("\n"," "));
+        String name = "file";
+        if (!eventArgs.isFile)
+        {
+            name = "directory";
+        }
+        logger.info(" The encryption is successfully done and takes "+eventArgs.Time.atZone(ZoneId.of("UTC")).toInstant().toEpochMilli()+" milliseconds. " +
+                " the encrypted "+name+" stored: " + eventArgs.decrypted + " and the key: " + eventArgs.key.replaceAll("\n"," "));
     }
 }
