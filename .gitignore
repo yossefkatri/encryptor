@@ -2,5 +2,5 @@
 /out/
 /src/main/java/outputFiles/
 /src/main/java/logs/
-/src/test/
+/src/test/java/PlayGround.java
 /target/
