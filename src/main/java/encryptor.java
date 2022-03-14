@@ -2,6 +2,7 @@ import encriptionAlgorithms.IEncryptionAlgorithm;
 import encriptionAlgorithms.basicAlgorithms.XorEncryption;
 import encriptionAlgorithms.complexAlgorithm.DoubleEncryption;
 import keys.IKey;
+import multiThreading.AsyncDirectoryProcessor;
 import multiThreading.IDirectoryProcessor;
 import multiThreading.SyncDirectoryProcessor;
 import observers.EncryptionLog4JLogger;
@@ -87,7 +88,8 @@ public class encryptor {
                     IKey<Integer> key = keyManager.buildKey(keys);
                     logger.debug("finish to create the structure keys");
                     fileEncryptor.decryptFile(encryptedFilePath, decryptedFilePath, key);
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     logger.error(e);
                 }
             }
@@ -105,10 +107,8 @@ public class encryptor {
 
                     logger.debug("generate keys for encryption");
                     IKey<Integer> key = keyManager.getKeys();
-
-                    IDirectoryProcessor<Integer> iDirectoryProcessor = new SyncDirectoryProcessor<>(fileEncryptor);
+                    IDirectoryProcessor<Integer> iDirectoryProcessor = getIDirectoryProcessor(scanner, logger, input, fileEncryptor);
                     iDirectoryProcessor.encryptDirectory(dirPath, outputPath, key);
-
                     Path keyPath = keyManager.saveKey(outputPath, key);
                     logger.info("save key file successfully in " + keyPath);
                 } catch (Exception e) {
@@ -144,7 +144,8 @@ public class encryptor {
                     IKey<Integer> key = keyManager.buildKey(keys);
                     logger.debug("finish to create the structure keys");
 
-                    IDirectoryProcessor<Integer> iDirectoryProcessor = new SyncDirectoryProcessor<>(fileEncryptor);
+                    IDirectoryProcessor<Integer> iDirectoryProcessor = getIDirectoryProcessor(scanner, logger, input, fileEncryptor);
+
                     iDirectoryProcessor.decryptedDirectory(encryptedDirPath, decryptedDirPath, key);
 
                 } catch (Exception e) {
@@ -155,6 +156,24 @@ public class encryptor {
                 logger.error("you should choice between 1-4");
             }
         }
+    }
+
+    private static IDirectoryProcessor<Integer> getIDirectoryProcessor(Scanner scanner, Logger logger, int input, FileEncryptor<Integer> fileEncryptor) throws Exception {
+        System.out.println("menu: \n 1: Synchronize \n 2: Asynchronous");
+        int choice = scanner.nextInt();
+        logger.debug("choice: " + input);
+        scanner.nextLine();
+        IDirectoryProcessor<Integer> iDirectoryProcessor;
+        if (choice == 1) {
+            iDirectoryProcessor = new SyncDirectoryProcessor<>(fileEncryptor);
+            logger.debug("the sync operation is chosen");
+        } else if (choice == 2) {
+            iDirectoryProcessor = new AsyncDirectoryProcessor<>(fileEncryptor);
+            logger.debug("the Async operation is chosen");
+        } else {
+            throw new Exception("you should choice between 1-2");
+        }
+        return iDirectoryProcessor;
     }
 
     private static void isDebug() {

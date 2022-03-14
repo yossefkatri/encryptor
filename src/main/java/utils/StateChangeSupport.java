@@ -24,7 +24,7 @@ public class StateChangeSupport {
         decryptionStartedListeners.add(decryptionStartedListener);
     }
 
-    public synchronized void notifyDecryptionStartedListeners(Object source, LocalDateTime startTime, String encryptionAlgorithmName, Path decryptedFilePath, Path encryptedFilePath, String key, Boolean isFile) {
+    public  void notifyDecryptionStartedListeners(Object source, LocalDateTime startTime, String encryptionAlgorithmName, Path decryptedFilePath, Path encryptedFilePath, String key, Boolean isFile) {
         for (IDecryptionStartedListener listener :
                 decryptionStartedListeners) {
             listener.decryptionStarted(new DecryptionStartedEvent(source, startTime, encryptionAlgorithmName, decryptedFilePath, encryptedFilePath, key, isFile));
@@ -35,7 +35,7 @@ public class StateChangeSupport {
         decryptionEndedListeners.add(decryptionEndedListener);
     }
 
-    public synchronized void notifyDecryptionEndedListeners(Object source, LocalDateTime endTime, String encryptionAlgorithmName, Path decryptedFilePath, Path encryptedFilePath, String key, Boolean isFile) {
+    public  void notifyDecryptionEndedListeners(Object source, LocalDateTime endTime, String encryptionAlgorithmName, Path decryptedFilePath, Path encryptedFilePath, String key, Boolean isFile) {
         for (IDecryptionEndedListener listener :
                 decryptionEndedListeners) {
             listener.decryptionEnded(new DecryptionEndedEvent(source, endTime,encryptionAlgorithmName,decryptedFilePath,encryptedFilePath,key, isFile));
@@ -47,7 +47,7 @@ public class StateChangeSupport {
         encryptionEndedListeners.add(encryptionEndedListener);
     }
 
-    public synchronized void notifyEncryptionEndedListeners(Object source, LocalDateTime endTime, String encryptionAlgorithmName, Path decryptedFilePath, Path encryptedFilePath, String key, Boolean isFile) {
+    public  void notifyEncryptionEndedListeners(Object source, LocalDateTime endTime, String encryptionAlgorithmName, Path decryptedFilePath, Path encryptedFilePath, String key, Boolean isFile) {
         for (IEncryptionEndedListener listener :
                 encryptionEndedListeners) {
             listener.encryptEnded(new EncryptionEndedEvent(source, endTime, encryptionAlgorithmName,decryptedFilePath, encryptedFilePath, key, isFile));
@@ -58,7 +58,7 @@ public class StateChangeSupport {
         encryptionStartedListeners.add(encryptionStartedListener);
     }
 
-    public synchronized void notifyEncryptionStartedListeners(Object source, LocalDateTime startTime, String encryptionAlgorithmName, Path decryptedFilePath, Path encryptedFilePath, String key,Boolean isFile) {
+    public  void notifyEncryptionStartedListeners(Object source, LocalDateTime startTime, String encryptionAlgorithmName, Path decryptedFilePath, Path encryptedFilePath, String key,Boolean isFile) {
 
         for (IEncryptionStartedListener listener :
                 encryptionStartedListeners) {

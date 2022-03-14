@@ -6,6 +6,7 @@ import utils.FileEncryptor;
 import utils.FileStream;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Instant;
@@ -33,12 +34,13 @@ public class SyncDirectoryProcessor<T> implements IDirectoryProcessor<T> {
         LocalDateTime startTime = LocalDateTime.now();
         fileEncryptor.getStateChangeSupport().notifyEncryptionStartedListeners(this, startTime, encryptionAlgorithm.toString(), outputDirPath, originalDirPath, key.toString(), false);
 
+        FilenameFilter filter = (dir, name) -> name.endsWith(".txt") && !name.equals("key.txt") && new File(dir,name).isFile();
         File dir = new File(originalDirPath.toString());
+        String[] files = Objects.requireNonNull(dir.list(filter));
+
         FileStream.createDirectory(outputDirPath);
-        for (File file : Objects.requireNonNull(dir.listFiles())) {
-            if (file.isFile() && file.getName().contains(".txt")) {
-                fileEncryptor.encryptFile(Paths.get(originalDirPath.toString(), file.getName()), Paths.get(outputDirPath.toString(), file.getName()), key);
-            }
+        for (String file : files) {
+                fileEncryptor.encryptFile(Paths.get(originalDirPath.toString(), file), Paths.get(outputDirPath.toString(), file), key);
         }
 
         LocalDateTime period = getPeriod(startTime);
@@ -51,12 +53,14 @@ public class SyncDirectoryProcessor<T> implements IDirectoryProcessor<T> {
         LocalDateTime startTime = LocalDateTime.now();
         fileEncryptor.getStateChangeSupport().notifyDecryptionStartedListeners(this, startTime, encryptionAlgorithm.toString(), outputDirPath, originalDirPath, key.toString(), false);
 
+        FilenameFilter filter = (dir, name) -> name.endsWith(".txt") && !name.equals("key.txt") && new File(dir,name).isFile();
         File dir = new File(originalDirPath.toString());
+        String[] files = Objects.requireNonNull(dir.list(filter));
+
         FileStream.createDirectory(outputDirPath);
-        for (File file : Objects.requireNonNull(dir.listFiles())) {
-            if (file.isFile() && file.getName().contains(".txt") && !file.getName().contains("key.txt")) {
-                fileEncryptor.decryptFile(Paths.get(originalDirPath.toString(), file.getName()), Paths.get(outputDirPath.toString(), file.getName()), key);
-            }
+        for (String file : files) {
+                fileEncryptor.decryptFile(Paths.get(originalDirPath.toString(), file), Paths.get(outputDirPath.toString(), file), key);
+
         }
 
         LocalDateTime period = getPeriod(startTime);
