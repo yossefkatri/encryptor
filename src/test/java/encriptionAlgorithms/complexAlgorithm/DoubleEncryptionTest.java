@@ -1,8 +1,8 @@
 package encriptionAlgorithms.complexAlgorithm;
 
 import encriptionAlgorithms.EncryptionAlgorithmImpl;
-import keys.DoubleKey;
-import keys.BasicKey;
+import utils.keys.DoubleKey;
+import utils.keys.BasicKey;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

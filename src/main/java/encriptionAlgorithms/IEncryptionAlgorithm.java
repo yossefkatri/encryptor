@@ -1,6 +1,6 @@
 package encriptionAlgorithms;
 
-import keys.IKey;
+import utils.keys.IKey;
 
 public interface IEncryptionAlgorithm<T> {
     // encrypt the plainChar with the key and return the ciphertext
@@ -8,6 +8,7 @@ public interface IEncryptionAlgorithm<T> {
 
     //decrypt the cipherChar with the key and return the plaintext
     char decryptChar(char cipherChar, IKey<T> key);
+
 
     int getKeyStrength();
 }

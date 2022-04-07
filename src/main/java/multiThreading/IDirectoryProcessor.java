@@ -1,6 +1,6 @@
 package multiThreading;
 
-import keys.IKey;
+import utils.keys.IKey;
 
 import java.nio.file.Path;
 

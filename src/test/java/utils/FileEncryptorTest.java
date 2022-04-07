@@ -1,7 +1,7 @@
 package utils;
 
 import encriptionAlgorithms.EncryptionAlgorithmImpl;
-import keys.IKey;
+import utils.keys.IKey;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;

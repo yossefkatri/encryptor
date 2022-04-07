@@ -2,8 +2,8 @@ package encriptionAlgorithms.complexAlgorithm;
 
 import encriptionAlgorithms.EncryptionAlgorithmImpl;
 import encriptionAlgorithms.IEncryptionAlgorithm;
-import keys.DoubleKey;
-import keys.IKey;
+import utils.keys.DoubleKey;
+import utils.keys.IKey;
 
 
 public class DoubleEncryption<T> extends EncryptionAlgorithmImpl<T> {
@@ -35,8 +35,17 @@ public class DoubleEncryption<T> extends EncryptionAlgorithmImpl<T> {
         return 2*encryptionAlgorithm.getKeyStrength();
     }
 
+    public String getName()
+    {
+        return "{DoubleEncryption}";
+    }
+
     @Override
     public String toString() {
         return "DoubleEncryption{"+ encryptionAlgorithm +"}";
+    }
+
+    public IEncryptionAlgorithm<T> getEncryptionAlgorithm() {
+        return encryptionAlgorithm;
     }
 }

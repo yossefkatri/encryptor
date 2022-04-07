@@ -1,6 +1,6 @@
-package multiThreading;
+package multiThreading.Tasks;
 
-import keys.IKey;
+import utils.keys.IKey;
 import utils.FileEncryptor;
 
 import java.nio.file.Path;

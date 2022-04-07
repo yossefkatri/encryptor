@@ -1,4 +1,4 @@
-package keys;
+package utils.keys;
 
 public class BasicKey<T> implements IKey<T> {
     public final T key;

@@ -1,14 +1,12 @@
 package utils;
 
 import encriptionAlgorithms.EncryptionAlgorithmImpl;
-import encriptionAlgorithms.IEncryptionAlgorithm;
 import exceptions.InvalidEncryptionKeyException;
-import keys.BasicKey;
-import keys.DoubleKey;
-import keys.IKey;
+import utils.keys.BasicKey;
+import utils.keys.DoubleKey;
+import utils.keys.IKey;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;

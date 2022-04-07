@@ -1,7 +1,9 @@
 package multiThreading;
 
 import encriptionAlgorithms.IEncryptionAlgorithm;
-import keys.IKey;
+import utils.keys.IKey;
+import multiThreading.Tasks.DecryptionTask;
+import multiThreading.Tasks.EncryptionTask;
 import utils.FileEncryptor;
 import utils.FileStream;
 

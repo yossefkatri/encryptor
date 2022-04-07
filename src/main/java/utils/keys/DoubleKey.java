@@ -1,4 +1,4 @@
-package keys;
+package utils.keys;
 
 public class DoubleKey<T> implements IKey<T> {
     final IKey<T> key1;

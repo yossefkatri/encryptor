@@ -1,7 +1,7 @@
 package encriptionAlgorithms.basicAlgorithms;
 
-import keys.IKey;
-import keys.BasicKey;
+import utils.keys.IKey;
+import utils.keys.BasicKey;
 
 import java.math.BigInteger;
 

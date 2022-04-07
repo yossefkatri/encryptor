@@ -1,7 +1,7 @@
 package utils;
 
 import encriptionAlgorithms.IEncryptionAlgorithm;
-import keys.IKey;
+import utils.keys.IKey;
 
 import java.io.File;
 import java.nio.file.Path;

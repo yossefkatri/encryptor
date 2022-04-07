@@ -1,6 +1,6 @@
 package encriptionAlgorithms.basicAlgorithms;
 
-import keys.BasicKey;
+import utils.keys.BasicKey;
 import org.junit.jupiter.api.Test;
 
 import static org.testng.Assert.assertEquals;

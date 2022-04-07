@@ -2,10 +2,11 @@ package encriptionAlgorithms.complexAlgorithm;
 
 import encriptionAlgorithms.EncryptionAlgorithmImpl;
 import encriptionAlgorithms.IEncryptionAlgorithm;
-import keys.IKey;
+import utils.keys.IKey;
 
 public class RepeatEncryption<T> extends EncryptionAlgorithmImpl<T> {
     final IEncryptionAlgorithm<T> encryptionAlgorithm;
+
     final int times;
 
     public RepeatEncryption(EncryptionAlgorithmImpl<T> encryptionAlgorithm, int times) {
@@ -40,5 +41,18 @@ public class RepeatEncryption<T> extends EncryptionAlgorithmImpl<T> {
     @Override
     public String toString() {
         return "RepeatEncryption{"+encryptionAlgorithm+"}";
+    }
+
+    public int getTimes() {
+        return times;
+    }
+
+    public String getName()
+    {
+        return "{RepeatEncryption}";
+    }
+
+    public IEncryptionAlgorithm<T> getEncryptionAlgorithm() {
+        return encryptionAlgorithm;
     }
 }
