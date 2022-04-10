@@ -9,26 +9,25 @@ import encriptionAlgorithms.basicAlgorithms.ShiftUpEncryption;
 import encriptionAlgorithms.basicAlgorithms.XorEncryption;
 import encriptionAlgorithms.complexAlgorithm.DoubleEncryption;
 import encriptionAlgorithms.complexAlgorithm.RepeatEncryption;
+import utils.settingsUtils.jaxb.PathAdapter;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+
 @XmlRootElement(name = "SettingInfo")
 @XmlType(propOrder = {"choice","sourcePath", "outputPath","keyPath","nameEncryptionAlgorithm", "times"})
 public class SettingsInfo<T> {
     int choice;
     int[] times;
     Path keyPath;
-    @XmlElement(name = "inputPath")
     Path sourcePath;
     Path outputPath;
     @JsonIgnore
-    @XmlTransient
     IEncryptionAlgorithm<T> encryptionAlgorithm;
     String nameEncryptionAlgorithm;
 
@@ -39,6 +38,8 @@ public class SettingsInfo<T> {
         this.nameEncryptionAlgorithm = nameEncryptionAlgorithm;
     }
 
+    @XmlElementWrapper(name = "times")
+    @XmlElement(name = "time")
     public int[] getTimes() {
         return times;
     }
@@ -56,13 +57,16 @@ public class SettingsInfo<T> {
     public Path getKeyPath() {
         return keyPath;
     }
+    @XmlJavaTypeAdapter(PathAdapter.class)
     public void setKeyPath(Path keyPath) {
         this.keyPath = keyPath;
     }
 
+    @XmlElement(name = "inputPath")
     public Path getSourcePath() {
         return sourcePath;
     }
+    @XmlJavaTypeAdapter(PathAdapter.class)
     public void setSourcePath(Path sourcePath) {
         this.sourcePath = sourcePath;
     }
@@ -70,10 +74,12 @@ public class SettingsInfo<T> {
     public Path getOutputPath() {
         return outputPath;
     }
+    @XmlJavaTypeAdapter(PathAdapter.class)
     public void setOutputPath(Path outputPath) {
         this.outputPath = outputPath;
     }
 
+    @XmlTransient
     public IEncryptionAlgorithm<T> getEncryptionAlgorithm() {
         return encryptionAlgorithm;
     }
@@ -114,4 +120,14 @@ public class SettingsInfo<T> {
             }
         }
         this.encryptionAlgorithm = (IEncryptionAlgorithm<T>) encryptionAlgorithm;
-    }}
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SettingsInfo)) return false;
+        SettingsInfo<?> that = (SettingsInfo<?>) o;
+        return choice == that.choice && Arrays.equals(times, that.times) && Objects.equals(keyPath, that.keyPath) && Objects.equals(sourcePath, that.sourcePath) && Objects.equals(outputPath, that.outputPath) && Objects.equals(nameEncryptionAlgorithm, that.nameEncryptionAlgorithm);
+    }
+
+}
