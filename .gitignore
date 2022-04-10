@@ -4,5 +4,5 @@
 /src/main/java/logs/
 /src/test/java/PlayGround.java
 /target/
-/src/main/java/settings/test.json
-/src/main/java/settings/test.xml
+/src/main/java/settings/json/test.json
+/src/main/java/settings/jaxb/test.xml

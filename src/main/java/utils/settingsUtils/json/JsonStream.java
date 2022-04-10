@@ -1,7 +1,9 @@
-package utils.settingsUtils;
+package utils.settingsUtils.json;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import utils.FileStream;
+import utils.settingsUtils.SettingsInfo;
+import utils.settingsUtils.SettingsStream;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,13 +11,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class JsonStream<T> implements SettingsStream<T>{
+public class JsonStream<T> implements SettingsStream<T> {
 
     public File jsonFile;
     public ObjectMapper mapper = new ObjectMapper();
 
     public JsonStream(String jsonFileName) throws IOException {
-        Path dir = Paths.get("src\\main\\java\\settings");
+        Path dir = Paths.get("src\\main\\java\\settings\\json");
         if (!Files.exists(dir))
         {
                 FileStream.createDirectory(dir);

@@ -11,7 +11,7 @@ import org.apache.logging.log4j.core.config.Configurator;
 import utils.FileEncryptor;
 import utils.FileStream;
 import utils.KeyManager;
-import utils.settingsUtils.JsonStream;
+import utils.settingsUtils.jaxb.JaxbStream;
 import utils.settingsUtils.SettingsInfo;
 import utils.settingsUtils.SettingsStream;
 
@@ -27,9 +27,9 @@ public class encryptor {
         Logger logger = LogManager.getLogger(encryptor.class);
         isDebug();
         System.out.println("menu: \n1: change settings \nelse:  run");
-        SettingsStream<Integer> jsonStream;
+        SettingsStream<Integer> settingsStream;
         try {
-            jsonStream = new JsonStream<>("info.json");
+            settingsStream = new JaxbStream<>("info.xml");
         } catch (IOException e) {
             logger.error(e);
             return;
@@ -38,14 +38,14 @@ public class encryptor {
         int choice = scanner.nextInt();
         if (choice == 1) {
             try {
-                writeToSettings(jsonStream);
+                writeToSettings(settingsStream);
             } catch (Exception e) {
                 logger.error(e);
             }
             return;
         }
         try {
-            SettingsInfo<Integer> settingsInfo = readFromSettings(jsonStream);
+            SettingsInfo<Integer> settingsInfo = readFromSettings(settingsStream);
             logger.debug("choice: " + settingsInfo.getChoice());
             logger.debug("input file: " + settingsInfo.getSourcePath());
             logger.debug("output file: " + settingsInfo.getOutputPath());
@@ -77,7 +77,7 @@ public class encryptor {
                     settingsInfo.setKeyPath(keyPath);
                     settingsInfo.setOutputPath(outputFilepath);
                     logger.debug("change key and output path on the settings");
-                    jsonStream.writeData(settingsInfo);
+                    settingsStream.writeData(settingsInfo);
                     break;
                 }
                 case 2: {
@@ -100,7 +100,7 @@ public class encryptor {
 
                     settingsInfo.setOutputPath(decryptedFilePath);
                     logger.debug("change output file path on the settings");
-                    jsonStream.writeData(settingsInfo);
+                    settingsStream.writeData(settingsInfo);
 
                     break;
                 }
@@ -120,7 +120,7 @@ public class encryptor {
                     settingsInfo.setKeyPath(keyPath);
                     settingsInfo.setOutputPath(outputPath);
                     logger.debug("change key and output path on the settings");
-                    jsonStream.writeData(settingsInfo);
+                    settingsStream.writeData(settingsInfo);
                     break;
                 }
                 case 4: {
@@ -146,7 +146,7 @@ public class encryptor {
 
                     settingsInfo.setOutputPath(decryptedDirPath);
                     logger.debug("change output directory path on the settings");
-                    jsonStream.writeData(settingsInfo);
+                    settingsStream.writeData(settingsInfo);
                     break;
                 }
                 case 5: {
@@ -165,7 +165,7 @@ public class encryptor {
                     settingsInfo.setKeyPath(keyPath);
                     settingsInfo.setOutputPath(outputPath);
                     logger.debug("change key and output path on the settings");
-                    jsonStream.writeData(settingsInfo);
+                    settingsStream.writeData(settingsInfo);
                     break;
                 }
                 case 6: {
@@ -191,7 +191,7 @@ public class encryptor {
 
                     settingsInfo.setOutputPath(decryptedDirPath);
                     logger.debug("change output directory path on the settings");
-                    jsonStream.writeData(settingsInfo);
+                    settingsStream.writeData(settingsInfo);
                     break;
                 }
                 default:

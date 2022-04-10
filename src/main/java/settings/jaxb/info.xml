@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<SettingInfo>
+    <choice>1</choice>
+    <inputPath>C:\Users\Yossef Katri\IdeaProjects\encryptor\src\main\java\utils\settingsUtils\jaxb\JaxbStream.java</inputPath>
+    <outputPath>C:\Users\Yossef Katri\IdeaProjects\encryptor\src\main\java\utils\settingsUtils\jaxb\JaxbStream.java</outputPath>
+    <keyPath>C:\Users\Yossef Katri\IdeaProjects\encryptor\src\main\java\utils\settingsUtils\jaxb\JaxbStream.java</keyPath>
+    <nameEncryptionAlgorithm>RepeatEncryption{RepeatEncryption{{XorEncryption}}}</nameEncryptionAlgorithm>
+    <times>
+        <time>4</time>
+        <time>7</time>
+    </times>
+</SettingInfo>

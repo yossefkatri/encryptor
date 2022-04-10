@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified">
+    <xs:complexType name="SettingType">
+        <xs:all>
+            <xs:element name="choice" type="xs:int"/>
+            <xs:element name="inputPath" type="xs:string"/>
+            <xs:element name="outputPath" type="xs:string"/>
+            <xs:element name="keyPath" type="xs:string"/>
+            <xs:element name="nameEncryptionAlgorithm" type="xs:string"/>
+            <xs:element name="times" type="timeType"/>
+        </xs:all>
+    </xs:complexType>
+    <xs:complexType name="timeType">
+            <xs:sequence maxOccurs="unbounded">
+                <xs:element name="time" type="xs:int"/>
+            </xs:sequence>
+    </xs:complexType>
+    <xs:element name="SettingInfo" type="SettingType"/>
+</xs:schema>
