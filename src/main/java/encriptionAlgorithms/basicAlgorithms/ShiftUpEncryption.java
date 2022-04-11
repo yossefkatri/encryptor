@@ -12,14 +12,9 @@ public class ShiftUpEncryption extends BasicEncryption {
         UPPER_LIMIT = 999;
     }
 
-    @Override
-    public String toString() {
-        return "{ShiftUpEncryption}";
-    }
 
-    public static ShiftUpEncryption getInstance(){
-        if (instanceShiftUpEncryption == null)
-        {
+    public static ShiftUpEncryption getInstance() {
+        if (instanceShiftUpEncryption == null) {
             instanceShiftUpEncryption = new ShiftUpEncryption();
         }
         return instanceShiftUpEncryption;
@@ -28,13 +23,14 @@ public class ShiftUpEncryption extends BasicEncryption {
     // encrypt the plaintext with the key and return the ciphertext
     @Override
     public char encryptChar(char plainChar, IKey<Integer> key) {
-        int intKey = ((BasicKey<Integer>)key).getKey();
+        int intKey = ((BasicKey<Integer>) key).getKey();
         return (char) ((plainChar + intKey) % ConstantsEncryption.MAX_CHAR);
     }
+
     //decrypt the ciphertext with the key and return the plaintext
     @Override
     public char decryptChar(char cipherChar, IKey<Integer> key) {
-        int intKey = ((BasicKey<Integer>)key).getKey();
+        int intKey = ((BasicKey<Integer>) key).getKey();
         return (char) ((cipherChar + ConstantsEncryption.MAX_CHAR - intKey) % ConstantsEncryption.MAX_CHAR);
     }
 

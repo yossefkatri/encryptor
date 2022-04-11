@@ -8,17 +8,14 @@ import utils.keys.BasicKey;
 public class XorEncryption extends BasicEncryption {
 
     static XorEncryption instanceXorEncryption = null;
+
     private XorEncryption() {
         UPPER_LIMIT = 99999;
     }
 
-    @Override
-    public String toString() {
-        return "{XorEncryption}";
-    }
 
-    public static XorEncryption getInstance(){
-        if (instanceXorEncryption == null){
+    public static XorEncryption getInstance() {
+        if (instanceXorEncryption == null) {
             instanceXorEncryption = new XorEncryption();
         }
         return instanceXorEncryption;
@@ -33,7 +30,7 @@ public class XorEncryption extends BasicEncryption {
 
     //decrypt the ciphertext with the key and return the plaintext
     public char decryptChar(char cipherChar, IKey<Integer> key) {
-        int intKey =  ((BasicKey<Integer>) key).getKey();
+        int intKey = ((BasicKey<Integer>) key).getKey();
         return (char) (cipherChar ^ intKey);
     }
 

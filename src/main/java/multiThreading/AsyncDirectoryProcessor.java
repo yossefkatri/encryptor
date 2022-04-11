@@ -21,7 +21,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class AsyncDirectoryProcessor<T> implements IDirectoryProcessor<T>{
+public class AsyncDirectoryProcessor<T> implements IDirectoryProcessor<T> {
     final private FileEncryptor<T> fileEncryptor;
 
     public AsyncDirectoryProcessor(FileEncryptor<T> fileEncryptor) {
@@ -39,13 +39,15 @@ public class AsyncDirectoryProcessor<T> implements IDirectoryProcessor<T>{
 
         IEncryptionAlgorithm<T> encryptionAlgorithm = fileEncryptor.getEncryptionAlgorithm();
         LocalDateTime startTime = LocalDateTime.now();
-        fileEncryptor.getStateChangeSupport().notifyEncryptionStartedListeners(this, startTime, encryptionAlgorithm.toString(), outputDirPath, originalDirPath, key.toString(), false);
+        fileEncryptor.getStateChangeSupport().notifyEncryptionStartedListeners(
+                this, startTime, encryptionAlgorithm.toString(), outputDirPath, originalDirPath, key.toString(), false
+                    );
 
-        FilenameFilter filter = (dir, name) -> name.endsWith(".txt") && !name.equals("key.txt") && new File(dir,name).isFile();
+        FilenameFilter filter = (dir, name) -> name.endsWith(".txt") && !name.equals("key.txt") && new File(dir, name).isFile();
         File dir = new File(originalDirPath.toString());
         String[] files = Objects.requireNonNull(dir.list(filter));
 
-        ExecutorService executorService  = Executors.newFixedThreadPool(files.length);
+        ExecutorService executorService = Executors.newFixedThreadPool(files.length);
         FileStream.createDirectory(outputDirPath);
 
         List<EncryptionTask<T>> tasks = new ArrayList<>();
@@ -62,7 +64,9 @@ public class AsyncDirectoryProcessor<T> implements IDirectoryProcessor<T>{
 
 
         LocalDateTime period = getPeriod(startTime);
-        fileEncryptor.getStateChangeSupport().notifyEncryptionEndedListeners(this, period, encryptionAlgorithm.toString(), outputDirPath, originalDirPath, key.toString(), false);
+        fileEncryptor.getStateChangeSupport().notifyEncryptionEndedListeners(
+                this, period, encryptionAlgorithm.toString(), outputDirPath, originalDirPath, key.toString(), false
+                    );
     }
 
     @Override
@@ -70,13 +74,15 @@ public class AsyncDirectoryProcessor<T> implements IDirectoryProcessor<T>{
 
         IEncryptionAlgorithm<T> encryptionAlgorithm = fileEncryptor.getEncryptionAlgorithm();
         LocalDateTime startTime = LocalDateTime.now();
-        fileEncryptor.getStateChangeSupport().notifyDecryptionStartedListeners(this, startTime, encryptionAlgorithm.toString(), outputDirPath, originalDirPath, key.toString(), false);
+        fileEncryptor.getStateChangeSupport().notifyDecryptionStartedListeners(
+                this, startTime, encryptionAlgorithm.toString(), outputDirPath, originalDirPath, key.toString(), false
+        );
 
-        FilenameFilter filter = (dir, name) -> name.endsWith(".txt") && !name.equals("key.txt") && new File(dir,name).isFile();
+        FilenameFilter filter = (dir, name) -> name.endsWith(".txt") && !name.equals("key.txt") && new File(dir, name).isFile();
         File dir = new File(originalDirPath.toString());
         String[] files = Objects.requireNonNull(dir.list(filter));
 
-        ExecutorService executorService  = Executors.newFixedThreadPool(files.length);
+        ExecutorService executorService = Executors.newFixedThreadPool(files.length);
         FileStream.createDirectory(outputDirPath);
 
         List<DecryptionTask<T>> tasks = new ArrayList<>();
@@ -93,6 +99,8 @@ public class AsyncDirectoryProcessor<T> implements IDirectoryProcessor<T>{
 
 
         LocalDateTime period = getPeriod(startTime);
-        fileEncryptor.getStateChangeSupport().notifyDecryptionEndedListeners(this, period, encryptionAlgorithm.toString(), outputDirPath, originalDirPath, key.toString(), false);
+        fileEncryptor.getStateChangeSupport().notifyDecryptionEndedListeners(
+                this, period, encryptionAlgorithm.toString(), outputDirPath, originalDirPath, key.toString(), false
+        );
     }
 }

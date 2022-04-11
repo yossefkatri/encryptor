@@ -2,6 +2,7 @@ package encriptionAlgorithms.complexAlgorithm;
 
 import encriptionAlgorithms.EncryptionAlgorithmImpl;
 import encriptionAlgorithms.IEncryptionAlgorithm;
+import exceptions.InvalidEncryptionKeyException;
 import utils.keys.IKey;
 
 public class RepeatEncryption<T> extends EncryptionAlgorithmImpl<T> {
@@ -16,7 +17,7 @@ public class RepeatEncryption<T> extends EncryptionAlgorithmImpl<T> {
     }
 
     @Override
-    public char encryptChar(char plainChar, IKey<T> key) {
+    public char encryptChar(char plainChar, IKey<T> key) throws InvalidEncryptionKeyException {
         char ciphertext = plainChar;
         for (int i = 0; i < times; ++i) {
             ciphertext = encryptionAlgorithm.encryptChar(ciphertext,key);
@@ -25,7 +26,7 @@ public class RepeatEncryption<T> extends EncryptionAlgorithmImpl<T> {
     }
 
     @Override
-    public char decryptChar(char cipherChar, IKey<T> key) {
+    public char decryptChar(char cipherChar, IKey<T> key) throws InvalidEncryptionKeyException {
         char plainChar = cipherChar;
         for (int i = 0; i < times; ++i) {
             plainChar =encryptionAlgorithm.decryptChar(plainChar,key);
@@ -40,7 +41,7 @@ public class RepeatEncryption<T> extends EncryptionAlgorithmImpl<T> {
 
     @Override
     public String toString() {
-        return "RepeatEncryption{"+encryptionAlgorithm+"}";
+        return "RepeatEncryption{"+encryptionAlgorithm+","+times+"}";
     }
 
     public int getTimes() {

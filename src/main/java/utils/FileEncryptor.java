@@ -1,6 +1,7 @@
 package utils;
 
 import encriptionAlgorithms.IEncryptionAlgorithm;
+import exceptions.InvalidEncryptionKeyException;
 import utils.keys.IKey;
 
 import java.io.File;
@@ -21,7 +22,7 @@ public class FileEncryptor<T> {
         return Instant.ofEpochMilli(mills).atZone(ZoneId.of("UTC")).toLocalDateTime();
     }
 
-    private String encrypt(String plaintext, IKey<T> key) {
+    private String encrypt(String plaintext, IKey<T> key) throws InvalidEncryptionKeyException {
         StringBuilder encryptedData = new StringBuilder();
         for (char plainChar : plaintext.toCharArray()) {
             encryptedData.append(encryptionAlgorithm.encryptChar(plainChar, key));
@@ -29,7 +30,7 @@ public class FileEncryptor<T> {
         return encryptedData.toString();
     }
 
-    private String decrypt(String ciphertext, IKey<T> key) {
+    private String decrypt(String ciphertext, IKey<T> key) throws InvalidEncryptionKeyException {
         StringBuilder decryptedData = new StringBuilder();
         for (char cipherChar : ciphertext.toCharArray()) {
             decryptedData.append(encryptionAlgorithm.decryptChar(cipherChar, key));

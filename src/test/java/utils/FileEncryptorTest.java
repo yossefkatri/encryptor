@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 @SuppressWarnings("unchecked")
 class FileEncryptorTest {
     final EncryptionAlgorithmImpl<Integer> encryptionAlgorithm = mock(EncryptionAlgorithmImpl.class);
-    final FileEncryptor testedEncryptor = new FileEncryptor(encryptionAlgorithm);
+    final FileEncryptor<Integer> testedEncryptor = new FileEncryptor<>(encryptionAlgorithm);
 
     @Test
     void encryptFileSourceFileNonExist() {
@@ -41,14 +41,15 @@ class FileEncryptorTest {
 
     @Test
     void encryptFileTest() {
-        String userDirectory = Paths.get("src\\main\\java\\outputFiles").toAbsolutePath().toString();
-
-        when(encryptionAlgorithm.encryptChar(any(char.class), any(IKey.class))).thenReturn('d');
-        when(encryptionAlgorithm.getNumberOfKeys()).thenReturn(1);
-        Path sPath = Paths.get(userDirectory, "tested5.txt");
-
-        File sFile = new File(sPath.toString());
         try {
+
+            String userDirectory = Paths.get("src\\main\\java\\outputFiles").toAbsolutePath().toString();
+
+            when(encryptionAlgorithm.encryptChar(any(char.class), any(IKey.class))).thenReturn('d');
+            when(encryptionAlgorithm.getNumberOfKeys()).thenReturn(1);
+            Path sPath = Paths.get(userDirectory, "tested5.txt");
+
+            File sFile = new File(sPath.toString());
             FileWriter sFileWriter = new FileWriter(sFile);
             sFileWriter.write("ss\nsss");
             sFileWriter.close();
@@ -63,6 +64,7 @@ class FileEncryptorTest {
             assertEquals("dddddd", content);
 
         } catch (Exception e) {
+            e.printStackTrace();
             fail();
         }
 
@@ -71,17 +73,18 @@ class FileEncryptorTest {
     @Test
     void decryptFileTest() {
 
-        String userDirectory = Paths.get("src\\main\\java\\outputFiles").toAbsolutePath().toString();
-
-        when(encryptionAlgorithm.decryptChar(any(char.class), any(IKey.class))).thenReturn('d');
-        when(encryptionAlgorithm.getNumberOfKeys()).thenReturn(1);
-        when(encryptionAlgorithm.getKeyStrength()).thenReturn(54);
-
-        Path sPath = Paths.get(userDirectory, "tested7.txt");
-        Path keyPath = Paths.get(userDirectory, "key.txt");
-        File sFile = new File(sPath.toString());
-        File keyFile = new File(keyPath.toString());
         try {
+
+            String userDirectory = Paths.get("src\\main\\java\\outputFiles").toAbsolutePath().toString();
+
+            when(encryptionAlgorithm.decryptChar(any(char.class), any(IKey.class))).thenReturn('d');
+            when(encryptionAlgorithm.getNumberOfKeys()).thenReturn(1);
+            when(encryptionAlgorithm.getKeyStrength()).thenReturn(54);
+
+            Path sPath = Paths.get(userDirectory, "tested7.txt");
+            Path keyPath = Paths.get(userDirectory, "key.txt");
+            File sFile = new File(sPath.toString());
+            File keyFile = new File(keyPath.toString());
             FileWriter sFileWriter = new FileWriter(sFile);
             sFileWriter.write("ss\nsss");
             sFileWriter.close();
@@ -101,6 +104,7 @@ class FileEncryptorTest {
             assertEquals("dddddd", content);
 
         } catch (Exception e) {
+            e.printStackTrace();
             fail();
         }
     }

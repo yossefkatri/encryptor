@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -37,13 +38,13 @@ class KeyManagerTest {
     @Test
     void checkKeysKeyOutOfRange() {
         when(encryptionAlgorithm.getKeyStrength()).thenReturn(1);
-        assertThrows(InvalidEncryptionKeyException.class, ()->keyManager.checkKeys(Arrays.asList(123)));
+        assertThrows(InvalidEncryptionKeyException.class, ()->keyManager.checkKeys(Collections.singletonList(123)));
     }
 
     @Test
     void getKeys() {
         when(encryptionAlgorithm.getNumberOfKeys()).thenReturn(4);
-        IKey<Integer> key = keyManager.getKeys();
+        IKey<Integer> key = keyManager.generateKeys();
         assertEquals(key.toString().split("\n").length,4);
     }
 

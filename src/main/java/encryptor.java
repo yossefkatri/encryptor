@@ -11,7 +11,6 @@ import org.apache.logging.log4j.core.config.Configurator;
 import utils.FileEncryptor;
 import utils.FileStream;
 import utils.KeyManager;
-import utils.settingsUtils.jaxb.JaxbStream;
 import utils.settingsUtils.SettingsInfo;
 import utils.settingsUtils.SettingsStream;
 import utils.settingsUtils.json.JsonStream;
@@ -26,7 +25,12 @@ import java.util.Scanner;
 public class encryptor {
     public static void main(String[] args) {
         Logger logger = LogManager.getLogger(encryptor.class);
-        isDebug();
+        boolean isDebugMode = java.lang.management.ManagementFactory.
+                getRuntimeMXBean().
+                getInputArguments().toString().contains("jdwp");
+        if (!isDebugMode) {
+            Configurator.setRootLevel(Level.INFO);
+        }
         System.out.println("menu: \n1: change settings \nelse:  run");
         SettingsStream<Integer> settingsStream;
         try {
@@ -67,7 +71,7 @@ public class encryptor {
                     Path outputFilepath = FileStream.getFileName(sourcePath, "_encrypted");
 
                     logger.debug("generate keys for encryption");
-                    IKey<Integer> key = keyManager.getKeys();
+                    IKey<Integer> key = keyManager.generateKeys();
                     logger.debug("output file path: " + outputFilepath + " key content: " + key);
                     fileEncryptor.encryptFile(sourcePath, outputFilepath, key);
 
@@ -112,7 +116,7 @@ public class encryptor {
                     logger.debug("input directory path:" + dirPath + " output directory path: " + outputPath + " key directory:" + outputPath);
 
                     logger.debug("generate keys for encryption");
-                    IKey<Integer> key = keyManager.getKeys();
+                    IKey<Integer> key = keyManager.generateKeys();
                     IDirectoryProcessor<Integer> iDirectoryProcessor = new SyncDirectoryProcessor<>(fileEncryptor);
                     iDirectoryProcessor.encryptDirectory(dirPath, outputPath, key);
                     Path keyPath = keyManager.saveKey(outputPath, key);
@@ -157,7 +161,7 @@ public class encryptor {
                     logger.debug("input file path:" + dirPath + " output file path: " + outputPath + " key directory:" + outputPath);
 
                     logger.debug("generate keys for encryption");
-                    IKey<Integer> key = keyManager.getKeys();
+                    IKey<Integer> key = keyManager.generateKeys();
                     IDirectoryProcessor<Integer> iDirectoryProcessor = new AsyncDirectoryProcessor<>(fileEncryptor);
                     iDirectoryProcessor.encryptDirectory(dirPath, outputPath, key);
                     Path keyPath = keyManager.saveKey(outputPath, key);
@@ -204,19 +208,17 @@ public class encryptor {
         }
     }
 
-    private static void isDebug() {
-        boolean isDebug = java.lang.management.ManagementFactory.
-                getRuntimeMXBean().
-                getInputArguments().toString().contains("jdwp");
-        if (!isDebug) {
-            Configurator.setRootLevel(Level.INFO);
-        }
-    }
-
     private static void writeToSettings(SettingsStream<Integer> jsonStream) throws Exception {
         Scanner scanner = new Scanner(System.in);
         System.out.println("if you want to skip press -1\n");
-        SettingsInfo<Integer> settingsInfo = jsonStream.readData();
+        SettingsInfo<Integer> settingsInfo;
+        try {
+            settingsInfo = jsonStream.readData();
+        }
+        catch (Exception ex)
+        {
+            settingsInfo = new SettingsInfo<>();
+        }
         System.out.println("menu: \n 1: encryption file \n 2: decryption file \n 3: encryption directory Sync \n 4: decryption directory Sync \n 5: encryption directory  Async\n 6: decryption directory Async");
         int input = scanner.nextInt();
         if (input != -1) {

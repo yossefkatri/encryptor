@@ -1,10 +1,11 @@
 {
-  "choice": 1,
+  "choice": 4,
   "times": [
-    0
+    6,
+    4
   ],
-  "keyPath": "file:///C:/Users/Yossef%20Katri/IdeaProjects/encryptor/src/main/java/outputFiles/key.txt",
-  "sourcePath": "file:///C:/Users/Yossef%20Katri/IdeaProjects/encryptor/src/main/java/outputFiles/input.txt",
-  "outputPath": "file:///C:/Users/Yossef%20Katri/IdeaProjects/encryptor/src/main/java/outputFiles/input_encrypted.txt",
-  "nameEncryptionAlgorithm": "DoubleEncryption{XorEncryption}"
+  "keyPath": "file:///C:/Users/Yossef%20Katri/IdeaProjects/encryptor/src/main/java/outputFiles/",
+  "sourcePath": "file:///C:/Users/Yossef%20Katri/IdeaProjects/encryptor/src/main/java/outputFiles/",
+  "outputPath": "file:///C:/Users/Yossef%20Katri/IdeaProjects/encryptor/src/main/java/outputFiles/",
+  "nameEncryptionAlgorithm": "RepeatEncryption{RepeatEncryption{{XorEncryption}}}"
 }
