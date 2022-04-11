@@ -1,0 +1,10 @@
+{
+  "choice": 1,
+  "times": [
+    0
+  ],
+  "keyPath": "file:///C:/Users/Yossef%20Katri/IdeaProjects/encryptor/src/main/java/outputFiles/key.txt",
+  "sourcePath": "file:///C:/Users/Yossef%20Katri/IdeaProjects/encryptor/src/main/java/outputFiles/input.txt",
+  "outputPath": "file:///C:/Users/Yossef%20Katri/IdeaProjects/encryptor/src/main/java/outputFiles/input_encrypted.txt",
+  "nameEncryptionAlgorithm": "DoubleEncryption{XorEncryption}"
+}

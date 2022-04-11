@@ -14,6 +14,7 @@ import utils.KeyManager;
 import utils.settingsUtils.jaxb.JaxbStream;
 import utils.settingsUtils.SettingsInfo;
 import utils.settingsUtils.SettingsStream;
+import utils.settingsUtils.json.JsonStream;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -29,7 +30,7 @@ public class encryptor {
         System.out.println("menu: \n1: change settings \nelse:  run");
         SettingsStream<Integer> settingsStream;
         try {
-            settingsStream = new JaxbStream<>("info.xml");
+            settingsStream = new JsonStream<>("info.json");
         } catch (IOException e) {
             logger.error(e);
             return;

@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/product.schema.json",
+  "title": "SettingInfo",
+  "description": "input data for the encryptor",
+  "type": "object",
+  "properties": {
+    "choice": {
+      "description": "The chosen operation",
+      "type": "integer"
+    },
+    "times": {
+      "description":"times to repeat, for the RepeatEncryption",
+      "type": "array",
+      "items": {
+        "type": "integer"
+      },
+      "minItems": 1
+    },
+    "keyPath": {
+      "description": "location of the key file",
+      "type": "string"
+    },
+    "sourcePath": {
+      "description": "location of the input file",
+      "type": "string"
+    },
+    "outputPath": {
+      "description": "location of the output file",
+      "type": "string"
+    },
+    "nameEncryptionAlgorithm": {
+      "description": "The name of the algorithm",
+      "type": "string"
+    }
+  },
+  "required": [ "choice","times", "keyPath","sourcePath","outputPath","nameEncryptionAlgorithm"]
+}
