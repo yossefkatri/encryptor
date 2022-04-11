@@ -1,3 +1,8 @@
 # Project exclude paths
 /out/
 /src/main/java/outputFiles/
+/src/main/java/logs/
+/src/test/java/PlayGround.java
+/target/
+/src/main/java/settings/json/test.json
+/src/main/java/settings/jaxb/test.xml

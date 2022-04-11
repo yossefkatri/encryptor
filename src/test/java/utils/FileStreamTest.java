@@ -31,7 +31,9 @@ class FileStreamTest {
 
     @Test
     void createFile() {
-         Path path = Paths.get("C:\\Users\\Yossef Katri\\IdeaProjects\\encryptor\\src\\main\\java\\outputFiles\\tested3.txt");
+        String userDirectory = Paths.get("src\\main\\java\\outputFiles").toAbsolutePath().toString();
+        Path path = Paths.get(userDirectory,"tested3.txt");
+
         try {
             File file = FileStream.createFile(path);
             if(!file.exists())
@@ -45,7 +47,8 @@ class FileStreamTest {
 
     @Test
     void getKeys() {
-        Path Path = Paths.get("C:\\Users\\Yossef Katri\\IdeaProjects\\encryptor\\src\\main\\java\\outputFiles\\tested2.txt");
+        String userDirectory = Paths.get("src\\main\\java\\outputFiles").toAbsolutePath().toString();
+        Path Path = Paths.get(userDirectory, "tested2.txt");
         try {
             FileWriter fileWriter = new FileWriter(Path.toString());
             fileWriter.write("1324\n455667\n5555");

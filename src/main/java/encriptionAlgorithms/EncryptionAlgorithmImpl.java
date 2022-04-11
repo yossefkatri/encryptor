@@ -1,6 +1,7 @@
 package encriptionAlgorithms;
 
-public abstract class EncryptionAlgorithmImpl implements IEncryptionAlgorithm {
+
+public abstract class EncryptionAlgorithmImpl<T> implements IEncryptionAlgorithm<T> {
     public int getNumberOfKeys() {
         return numberOfKeys;
     }

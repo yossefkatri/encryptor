@@ -1,64 +1,28 @@
 package utils;
 
-import encriptionAlgorithms.EncryptionAlgorithmImpl;
 import encriptionAlgorithms.IEncryptionAlgorithm;
 import exceptions.InvalidEncryptionKeyException;
-import keys.DoubleKey;
-import keys.IKey;
-import keys.IntKey;
+import utils.keys.IKey;
 
 import java.io.File;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 
-public class FileEncryptor {
-    private static final int UPPER_LIMIT = 500;
-    final IEncryptionAlgorithm encryptionAlgorithm;
+public class FileEncryptor<T> {
+    final IEncryptionAlgorithm<T> encryptionAlgorithm;
 
-    private IKey BuildKey(List<Integer> keys) throws InvalidEncryptionKeyException {
-        if (keys.size() == 1) {
-            int key = keys.get(0);
-            if (key < 0 || key > UPPER_LIMIT) {
-                throw new InvalidEncryptionKeyException(key, "The key should be between 0 to " + UPPER_LIMIT);
-            }
-            return new IntKey(key);
+    final StateChangeSupport stateChangeSupport = new StateChangeSupport();
 
-        }
-        else if (keys.size() == 0) {
-            return null;
-        }
-        IKey key1;
-        key1 = BuildKey(keys.subList(0, keys.size() / 2));
-
-        IKey key2;
-        key2 = BuildKey(keys.subList(keys.size() / 2, keys.size()));
-
-        return new DoubleKey(key1, key2);
+    private LocalDateTime getPeriod(LocalDateTime startTime) {
+        LocalDateTime endTime = LocalDateTime.now();
+        long mills = ChronoUnit.MILLIS.between(startTime, endTime);
+        return Instant.ofEpochMilli(mills).atZone(ZoneId.of("UTC")).toLocalDateTime();
     }
 
-    private IKey getKeys() throws Exception {
-        //get the necessary number of the keys
-        int numKeys = ((EncryptionAlgorithmImpl) encryptionAlgorithm).getNumberOfKeys();
-        List<Integer> keys = new ArrayList<>();
-        for (int i = 0; i < numKeys; ++i) {
-            //generate the key
-            Random randomizer = new Random();
-            int tempKey = randomizer.nextInt(UPPER_LIMIT);
-            keys.add(tempKey);
-        }
-        try {
-            return BuildKey(keys);
-        }
-        catch (InvalidEncryptionKeyException e) {
-            e.addInfo("The problem is about the randomizer");
-            throw e;
-        }
-    }
-
-    private String encrypt(String plaintext, IKey key) {
+    private String encrypt(String plaintext, IKey<T> key) throws InvalidEncryptionKeyException {
         StringBuilder encryptedData = new StringBuilder();
         for (char plainChar : plaintext.toCharArray()) {
             encryptedData.append(encryptionAlgorithm.encryptChar(plainChar, key));
@@ -66,7 +30,7 @@ public class FileEncryptor {
         return encryptedData.toString();
     }
 
-    private String decrypt(String ciphertext, IKey key) {
+    private String decrypt(String ciphertext, IKey<T> key) throws InvalidEncryptionKeyException {
         StringBuilder decryptedData = new StringBuilder();
         for (char cipherChar : ciphertext.toCharArray()) {
             decryptedData.append(encryptionAlgorithm.decryptChar(cipherChar, key));
@@ -74,46 +38,44 @@ public class FileEncryptor {
         return decryptedData.toString();
     }
 
-    public FileEncryptor(IEncryptionAlgorithm encryptionAlgorithm) {
+    public FileEncryptor(IEncryptionAlgorithm<T> encryptionAlgorithm) {
         this.encryptionAlgorithm = encryptionAlgorithm;
     }
 
-    public void encryptFile(Path originalFilePath, Path outputFilePath, Path keyPath) throws Exception {
-        String plainText;
-        plainText = FileStream.readFileContent(originalFilePath);
+    public void encryptFile(Path originalFilePath, Path outputFilePath, IKey<T> key) throws Exception {
+        LocalDateTime startTime = LocalDateTime.now();
+        stateChangeSupport.notifyEncryptionStartedListeners(this, startTime, encryptionAlgorithm.toString(), outputFilePath, originalFilePath, key.toString(), true);
 
-        IKey key = getKeys();
-
-
+        String plainText = FileStream.readFileContent(originalFilePath);
         String cipherText = encrypt(plainText, key);
 
-        File keyFile;
-        File cipherFile;
 
-
-        keyFile = FileStream.createFile(Paths.get(keyPath.toString(), "key.txt"));
-        cipherFile = FileStream.createFile(outputFilePath);
-
-        assert key != null;
-        FileStream.saveData(keyFile, key.toString());
+        File cipherFile = FileStream.createFile(outputFilePath);
         FileStream.saveData(cipherFile, cipherText);
+
+        LocalDateTime period = getPeriod(startTime);
+        stateChangeSupport.notifyEncryptionEndedListeners(this, period, encryptionAlgorithm.toString(), outputFilePath, originalFilePath, key.toString(), true);
     }
 
-    public void decryptFile(Path encryptedFilePath, Path outputFilePath, Path keyPath) throws Exception {
+    public void decryptFile(Path encryptedFilePath, Path outputFilePath, IKey<T> key) throws Exception {
+        LocalDateTime startTime = LocalDateTime.now();
+        stateChangeSupport.notifyDecryptionStartedListeners(this, startTime, encryptionAlgorithm.toString(), outputFilePath, encryptedFilePath, key.toString(), true);
+
         String cipherText = FileStream.readFileContent(encryptedFilePath);
-
-        List<Integer> keys = FileStream.readKeys(keyPath);
-        int numberOfKeys = ((EncryptionAlgorithmImpl) encryptionAlgorithm).getNumberOfKeys();
-        if (numberOfKeys != keys.size()) {
-            throw new InvalidEncryptionKeyException("Number of keys: " + keys.size() + "  \nExpected number of key: " + numberOfKeys);
-        }
-        IKey key = BuildKey(keys);
-
         String decryptMessage = decrypt(cipherText, key);
-        File decryptedFile;
-        decryptedFile = FileStream.createFile(outputFilePath);
 
+        File decryptedFile = FileStream.createFile(outputFilePath);
         FileStream.saveData(decryptedFile, decryptMessage);
+
+        LocalDateTime period = getPeriod(startTime);
+        stateChangeSupport.notifyDecryptionEndedListeners(this, period, encryptionAlgorithm.toString(), outputFilePath, encryptedFilePath, key.toString(), true);
     }
 
+    public StateChangeSupport getStateChangeSupport() {
+        return stateChangeSupport;
+    }
+
+    public IEncryptionAlgorithm<T> getEncryptionAlgorithm() {
+        return encryptionAlgorithm;
+    }
 }

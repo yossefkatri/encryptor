@@ -1,44 +1,60 @@
 package encriptionAlgorithms.complexAlgorithm;
 
 import encriptionAlgorithms.EncryptionAlgorithmImpl;
-import keys.IntKey;
+import utils.keys.BasicKey;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@SuppressWarnings("unchecked")
 class RepeatEncryptionTest {
-    final EncryptionAlgorithmImpl encryptionAlgorithmMocking = mock(EncryptionAlgorithmImpl.class);
-    final RepeatEncryption testedEncryption = new RepeatEncryption(encryptionAlgorithmMocking, 6);
+    final EncryptionAlgorithmImpl<Integer> encryptionAlgorithmMocking = mock(EncryptionAlgorithmImpl.class);
+    final RepeatEncryption<Integer> testedEncryption = new RepeatEncryption<>(encryptionAlgorithmMocking, 6);
 
     @Test
     void encryptChar() {
-        IntKey key = new IntKey(6);
-        when(encryptionAlgorithmMocking.encryptChar('d', key)).thenReturn('f');
-        when(encryptionAlgorithmMocking.encryptChar('f', key)).thenReturn('g');
-        when(encryptionAlgorithmMocking.encryptChar('g', key)).thenReturn('d');
+        try {
 
-        char encryptedChar = testedEncryption.encryptChar('d', key);
+            BasicKey<Integer> key = new BasicKey<>(6);
+            when(encryptionAlgorithmMocking.encryptChar('d', key)).thenReturn('f');
+            when(encryptionAlgorithmMocking.encryptChar('f', key)).thenReturn('g');
+            when(encryptionAlgorithmMocking.encryptChar('g', key)).thenReturn('d');
 
-        char[] arr = {'d', 'f', 'g'};
-        char res = arr[((testedEncryption.times) % 3)];
+            char encryptedChar = testedEncryption.encryptChar('d', key);
 
-        assertEquals(res, encryptedChar);
+            char[] arr = {'d', 'f', 'g'};
+            char res = arr[((testedEncryption.times) % 3)];
+
+            assertEquals(res, encryptedChar);
+        }catch (Exception ex)
+        {
+            ex.printStackTrace();
+            fail();
+        }
     }
 
     @Test
     void decryptChar() {
-        IntKey key = new IntKey(6);
-        when(encryptionAlgorithmMocking.decryptChar('d', key)).thenReturn('f');
-        when(encryptionAlgorithmMocking.decryptChar('f', key)).thenReturn('g');
-        when(encryptionAlgorithmMocking.decryptChar('g', key)).thenReturn('d');
+        try {
 
-        char decryptChar = testedEncryption.decryptChar('d', key);
+            BasicKey<Integer> key = new BasicKey<>(6);
+            when(encryptionAlgorithmMocking.decryptChar('d', key)).thenReturn('f');
+            when(encryptionAlgorithmMocking.decryptChar('f', key)).thenReturn('g');
+            when(encryptionAlgorithmMocking.decryptChar('g', key)).thenReturn('d');
 
-        char[] arr = {'d', 'f', 'g'};
-        char res = arr[((testedEncryption.times) % 3)];
+            char decryptChar = testedEncryption.decryptChar('d', key);
 
-        assertEquals(res, decryptChar);
+            char[] arr = {'d', 'f', 'g'};
+            char res = arr[((testedEncryption.times) % 3)];
+
+            assertEquals(res, decryptChar);
+        }catch (Exception ex)
+        {
+            ex.printStackTrace();
+            fail();
+        }
     }
 }

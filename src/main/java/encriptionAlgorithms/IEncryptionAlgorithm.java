@@ -1,13 +1,15 @@
 package encriptionAlgorithms;
 
-import keys.IKey;
+import exceptions.InvalidEncryptionKeyException;
+import utils.keys.IKey;
 
-public interface IEncryptionAlgorithm {
+public interface IEncryptionAlgorithm<T> {
     // encrypt the plainChar with the key and return the ciphertext
-    char encryptChar(char plainChar, IKey key);
+    char encryptChar(char plainChar, IKey<T> key) throws InvalidEncryptionKeyException;
 
     //decrypt the cipherChar with the key and return the plaintext
-    char decryptChar(char cipherChar, IKey key);
+    char decryptChar(char cipherChar, IKey<T> key) throws InvalidEncryptionKeyException;
+
 
     int getKeyStrength();
 }

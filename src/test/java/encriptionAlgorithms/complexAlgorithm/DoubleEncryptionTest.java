@@ -1,35 +1,51 @@
 package encriptionAlgorithms.complexAlgorithm;
 
 import encriptionAlgorithms.EncryptionAlgorithmImpl;
-import keys.DoubleKey;
-import keys.IntKey;
+import utils.keys.DoubleKey;
+import utils.keys.BasicKey;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class DoubleEncryptionTest {
-    final EncryptionAlgorithmImpl encryptionAlgorithmMocking = mock(EncryptionAlgorithmImpl.class);
-    final DoubleEncryption testedEncryption =new DoubleEncryption(encryptionAlgorithmMocking);
+
+    @SuppressWarnings("unchecked")
+    final EncryptionAlgorithmImpl<Integer> encryptionAlgorithmMocking =(EncryptionAlgorithmImpl<Integer>) mock(EncryptionAlgorithmImpl.class);
+    final DoubleEncryption<Integer> testedEncryption = new DoubleEncryption<>(encryptionAlgorithmMocking);
 
     @Test
     void encryptChar() {
-        DoubleKey key = new DoubleKey(new IntKey(4),new IntKey(6));
-        when(encryptionAlgorithmMocking.encryptChar('d', key.getKey1())).thenReturn('f');
-        when(encryptionAlgorithmMocking.encryptChar('f', key.getKey2())).thenReturn('g');
+        try {
+            DoubleKey<Integer> key = new DoubleKey<>(new BasicKey<>(4), new BasicKey<>(6));
+            when(encryptionAlgorithmMocking.encryptChar('d', key.getKey1())).thenReturn('f');
+            when(encryptionAlgorithmMocking.encryptChar('f', key.getKey2())).thenReturn('g');
 
-        char encryptedChar = testedEncryption.encryptChar('d',key);
-        assertEquals('g',encryptedChar);
+            char encryptedChar = testedEncryption.encryptChar('d', key);
+            assertEquals('g', encryptedChar);
+        }catch (Exception ex)
+        {
+            ex.printStackTrace();
+            fail();
+        }
     }
 
     @Test
     void decryptChar() {
-        DoubleKey key = new DoubleKey(new IntKey(4),new IntKey(6));
-        when(encryptionAlgorithmMocking.decryptChar('d', key.getKey2())).thenReturn('f');
-        when(encryptionAlgorithmMocking.decryptChar('f', key.getKey1())).thenReturn('g');
+        try {
 
-        char encryptedChar = testedEncryption.decryptChar('d',key);
-        assertEquals('g',encryptedChar);
+            DoubleKey<Integer> key = new DoubleKey<>(new BasicKey<>(4), new BasicKey<>(6));
+            when(encryptionAlgorithmMocking.decryptChar('d', key.getKey2())).thenReturn('f');
+            when(encryptionAlgorithmMocking.decryptChar('f', key.getKey1())).thenReturn('g');
+
+            char encryptedChar = testedEncryption.decryptChar('d', key);
+            assertEquals('g', encryptedChar);
+        }catch (Exception ex)
+        {
+            ex.printStackTrace();
+            fail();
+        }
     }
 }
